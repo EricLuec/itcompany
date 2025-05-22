@@ -1,8 +1,10 @@
 package el.itcompany.inventory;
 
-import el.itcompany.Building.DefaultBuilding;
+import el.itcompany.building.DefaultBuilding;
+import el.itcompany.exceptions.ItemNotFound;
 import el.itcompany.people.DefaultPerson;
 import el.itcompany.people.Manager;
+import el.itcompany.people.Person;
 
 import java.util.ArrayList;
 
@@ -10,7 +12,7 @@ public class DefaultInventory implements Inventory {
     String name;
     DefaultBuilding building;
     Manager manager;
-    ArrayList<DefaultItem> items = new ArrayList<DefaultItem>();
+    ArrayList<Item> items = new ArrayList<>();
 
     public DefaultInventory(String name, DefaultBuilding building, Manager manager) {
         this.name = name;
@@ -20,25 +22,26 @@ public class DefaultInventory implements Inventory {
 
     @Override
     public void getItems() {
-        for (DefaultItem item : items) {
+        for (Item item : items) {
             System.out.println(item.toString());
         }
     }
 
     @Override
-    public void getItem(String name) {
-        for (DefaultItem item : items) {
+    public Item getItem(String name) {
+        for (Item item : items) {
             if (item.toString().equals(name)) {
-                System.out.println(item);
+                return item;
             } else {
                 System.out.println(name + " has not been found");
+                throw new ItemNotFound("Item " + name + " not found");
             }
         }
     }
 
     @Override
-    public void returnItem(DefaultItem item) {
-        if (!item.available) {
+    public void returnItem(Item item) {
+        if (!item.getAvailable()) {
             System.out.println(item + " is already in storage");
         } else {
             System.out.println(item + " has been returned");
@@ -46,7 +49,7 @@ public class DefaultInventory implements Inventory {
     }
 
     @Override
-    public void breakItemOnPurpose(DefaultItem item, DefaultPerson person) {
+    public void breakItemOnPurpose(Item item, Person person) {
         items.remove(item);
         purchaseItem(item);
         System.out.println("due to irresponsibility, your manager" + person.getManager() + " will be informed." );
@@ -54,17 +57,15 @@ public class DefaultInventory implements Inventory {
     }
 
     @Override
-    public void breakItemOnAccident(DefaultItem item) {
+    public void breakItemOnAccident(Item item) {
         items.remove(item);
         purchaseItem(item);
         System.out.println("better watch out next time");
     }
 
     @Override
-    public void purchaseItem(DefaultItem item) {
+    public void purchaseItem(Item item) {
         items.add(item);
-        System.out.println(item + " purchased for" + item.purchaseCost);
+        System.out.println(item + " purchased for" + item.g);
     }
-
-
 }

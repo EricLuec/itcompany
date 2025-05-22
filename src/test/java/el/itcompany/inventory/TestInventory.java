@@ -1,14 +1,12 @@
 package el.itcompany.inventory;
 
-import el.itcompany.Building.DefaultBuilding;
-import el.itcompany.inventory.DefaultItem;
+import el.itcompany.building.DefaultBuilding;
 import el.itcompany.people.Manager;
 import el.itcompany.people.Position;
 import el.itcompany.sectors.IT_Sector;
 import org.junit.jupiter.api.Test;
 
-import static el.itcompany.Building.DefaultBuilding.BuildingType.Office;
-import static org.junit.jupiter.api.Assertions.*;
+import static el.itcompany.building.DefaultBuilding.BuildingType.Office;
 
 public class TestInventory {
     Position SWE = new Position(100000, "Software Dev", 2);
@@ -28,7 +26,6 @@ public class TestInventory {
     DefaultInventory hardwareInventory = new DefaultInventory("Hardware Inventory", sweBuilding, sweManager);
     @Test
     public void testInventoryItems() {
-        hardwareInventory.
 
     }
 }

@@ -1,13 +1,13 @@
 package el.itcompany.inventory;
 
-import el.itcompany.people.DefaultPerson;
+import el.itcompany.people.Person;
 
 public interface Inventory {
     void getItems();
-    void getItem(String name);
-    void returnItem(DefaultItem item);
-    void breakItemOnPurpose(DefaultItem item, DefaultPerson person);
-    void breakItemOnAccident(DefaultItem item);
-    void purchaseItem(DefaultItem item);
+    Item getItem(String name);
+    void returnItem(Item item);
+    void breakItemOnPurpose(Item item, Person person);
+    void breakItemOnAccident(Item item);
+    void purchaseItem(Item item);
 
 }

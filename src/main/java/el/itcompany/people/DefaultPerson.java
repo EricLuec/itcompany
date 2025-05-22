@@ -1,7 +1,8 @@
 package el.itcompany.people;
 
-import el.itcompany.Building.DefaultBuilding;
+import el.itcompany.building.DefaultBuilding;
 import el.itcompany.inventory.DefaultItem;
+import el.itcompany.inventory.Item;
 import el.itcompany.sectors.IT_Sector;
 
 import java.util.ArrayList;
@@ -11,8 +12,7 @@ public class DefaultPerson implements Person {
     String name;
     Position position;
     Manager manager;
-    ArrayList<String> complaints = new ArrayList<String>();
-    ArrayList<DefaultItem> itemsInPosession = new ArrayList<DefaultItem>();
+    ArrayList<Item> itemsInPosession = new ArrayList<>();
     IT_Sector sector;
     DefaultBuilding workPlace;
 
@@ -33,7 +33,8 @@ public class DefaultPerson implements Person {
         this.workPlace = workPlace;
     }
 
-    public String reportPerson(String message, DefaultPerson person) {
+    @Override
+    public String reportPerson(String message, Person person) {
         person.complaints.add(message);
         return message;
     }
@@ -43,20 +44,22 @@ public class DefaultPerson implements Person {
         return false;
     }
 
+    @Override
     public Manager getManager() {
         return this.manager;
     }
 
+    @Override
     public boolean listItemsInPosession(DefaultPerson person) {
         if (person == null) {
             System.out.println("Person is not found");
-            return false;
-        } else if (person.itemsInPosession.size() == 0) {
+            throw new IllegalArgumentException("Person is not found");
+        } else if (person.itemsInPosession.isEmpty()) {
             System.out.println("There are no items in posession");
             return false;
         }
         for (DefaultItem i : person.itemsInPosession) {
-            System.out.println(i.name.toString());
+            System.out.println(i.name);
         }
         return true;
     }

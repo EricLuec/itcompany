@@ -1,4 +1,4 @@
-package el.itcompany.Building;
+package el.itcompany.building;
 
 public interface Building {
 

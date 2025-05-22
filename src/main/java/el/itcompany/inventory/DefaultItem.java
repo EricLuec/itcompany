@@ -10,7 +10,14 @@ public class DefaultItem implements Item {
         this.purchaseCost = purchaseCost;
         this.available = available;
     }
+
+    @Override
     public boolean getAvailable() {
         return this.available;
+    }
+
+    @Override
+    public int getPurchaseCost() {
+        return this.purchaseCost;
     }
 }

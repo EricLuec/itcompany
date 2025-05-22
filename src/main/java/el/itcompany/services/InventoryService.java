@@ -1,4 +1,4 @@
 package el.itcompany.services;
 
-public class Inventory {
+public class InventoryService {
 }

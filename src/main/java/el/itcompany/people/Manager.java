@@ -1,6 +1,6 @@
 package el.itcompany.people;
 
-import el.itcompany.Building.DefaultBuilding;
+import el.itcompany.building.DefaultBuilding;
 import el.itcompany.inventory.DefaultItem;
 import el.itcompany.sectors.IT_Sector;
 
