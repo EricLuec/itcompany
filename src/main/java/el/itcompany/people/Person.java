@@ -3,10 +3,9 @@ package el.itcompany.people;
 import java.util.ArrayList;
 
 public interface Person {
-    ArrayList<String> complaints = new ArrayList<>();
 
     boolean isOpenForWork();
-    String reportPerson(String message, Person person);
+    String reportPerson(String message);
     Manager getManager();
-    boolean listItemsInPosession(Person person);
+    void listItemsInPosession();
 }

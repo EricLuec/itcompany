@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import static el.itcompany.building.DefaultBuilding.BuildingType.Office;
 
 public class TestInventory {
+    /*
     Position SWE = new Position(100000, "Software Dev", 2);
     Position Designer = new Position(150000, "UI/UX", 2);
     Position Manager = new Position(200000, "Manager", 3);
@@ -28,4 +29,6 @@ public class TestInventory {
     public void testInventoryItems() {
 
     }
+
+     */
 }

@@ -9,5 +9,4 @@ public interface Inventory {
     void breakItemOnPurpose(Item item, Person person);
     void breakItemOnAccident(Item item);
     void purchaseItem(Item item);
-
 }

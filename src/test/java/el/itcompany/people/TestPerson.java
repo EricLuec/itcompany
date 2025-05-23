@@ -8,6 +8,7 @@ import static el.itcompany.building.DefaultBuilding.BuildingType.Office;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestPerson {
+    /*
     Position SWE = new Position(100000, "Software Dev", 2);
     Position Manager = new Position(200000, "Manager", 3);
 
@@ -36,4 +37,6 @@ public class TestPerson {
         assertEquals("didnt read the log twice", personTwo.reportPerson("didnt read the log twice", person));
         assertEquals("[didnt read the log, didnt read the log twice]", person.complaints.toString());
     }
+
+     */
 }

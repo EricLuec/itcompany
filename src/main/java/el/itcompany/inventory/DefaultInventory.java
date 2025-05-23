@@ -2,7 +2,6 @@ package el.itcompany.inventory;
 
 import el.itcompany.building.DefaultBuilding;
 import el.itcompany.exceptions.ItemNotFound;
-import el.itcompany.people.DefaultPerson;
 import el.itcompany.people.Manager;
 import el.itcompany.people.Person;
 
@@ -29,14 +28,16 @@ public class DefaultInventory implements Inventory {
 
     @Override
     public Item getItem(String name) {
+        Item carrierItem = null;
         for (Item item : items) {
             if (item.toString().equals(name)) {
-                return item;
+                carrierItem = item;
             } else {
                 System.out.println(name + " has not been found");
                 throw new ItemNotFound("Item " + name + " not found");
             }
         }
+        return carrierItem;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class DefaultInventory implements Inventory {
         items.remove(item);
         purchaseItem(item);
         System.out.println("due to irresponsibility, your manager" + person.getManager() + " will be informed." );
-        person.reportPerson(item + "has been broken by " + person + " on purpose", person);
+        person.reportPerson(item + "has been broken by " + person + " on purpose");
     }
 
     @Override
@@ -66,6 +67,6 @@ public class DefaultInventory implements Inventory {
     @Override
     public void purchaseItem(Item item) {
         items.add(item);
-        System.out.println(item + " purchased for" + item.g);
+        System.out.println(item + " purchased for" + item.getPurchaseCost());
     }
 }

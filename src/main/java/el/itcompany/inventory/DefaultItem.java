@@ -20,4 +20,9 @@ public class DefaultItem implements Item {
     public int getPurchaseCost() {
         return this.purchaseCost;
     }
+
+    @Override
+    public Item getItem() {
+        return this;
+    }
 }

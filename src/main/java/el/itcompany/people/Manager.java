@@ -2,16 +2,19 @@ package el.itcompany.people;
 
 import el.itcompany.building.DefaultBuilding;
 import el.itcompany.inventory.DefaultItem;
+import el.itcompany.inventory.Item;
 import el.itcompany.sectors.IT_Sector;
+
+import java.util.ArrayList;
 
 public class Manager extends DefaultPerson {
 
-    public Manager(int age, String name, Position position, Manager manager, IT_Sector sector, DefaultBuilding workPlace) {
-        super(age, name, position, manager, sector, workPlace);
+    public Manager(int age, String name, Position position, Manager manager, IT_Sector sector, DefaultBuilding workPlace, ArrayList<String> complaints, ArrayList<Item> itemsInPosession) {
+        super(age, name, position, manager, sector, workPlace, complaints, itemsInPosession);
     }
 
-    public Manager(int age, String name, Position position, IT_Sector sector, DefaultBuilding workPlace) {
-        super(age, name, position, sector, workPlace);
+    public Manager(int age, String name, Position position, IT_Sector sector, DefaultBuilding workPlace, ArrayList<String> complaints, ArrayList<Item> itemsInPosession) {
+        super(age, name, position, sector, workPlace, complaints, itemsInPosession);
     }
 
     public String alterPosition(DefaultPerson person, Position NewPosition) {
@@ -20,7 +23,7 @@ public class Manager extends DefaultPerson {
     }
 
     public boolean grantItem(DefaultItem item, DefaultPerson person) {
-        if (item.getAvailable() == false || item == null) {
+        if (!item.getAvailable() || item == null) {
             System.out.println("Item not found or not available.");
             return false;
         }
@@ -31,7 +34,7 @@ public class Manager extends DefaultPerson {
     }
 
     public boolean revokeItem(DefaultItem item, DefaultPerson person) {
-        if (item.getAvailable() == true || item == null) {
+        if (item.getAvailable() || item == null) {
             System.out.println("Item not found or not available.");
             return false;
         }
@@ -41,6 +44,4 @@ public class Manager extends DefaultPerson {
         System.out.println("current items in posession: " + person.itemsInPosession.toString() + " items in posession");
         return true;
     }
-
-
 }
