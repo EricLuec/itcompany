@@ -1,4 +1,4 @@
-package el.itcompany.inventory;
+package el.itcompany.entities.inventory;
 
 public class DefaultItem implements Item {
     public String name;

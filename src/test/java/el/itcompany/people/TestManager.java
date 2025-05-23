@@ -1,13 +1,5 @@
 package el.itcompany.people;
 
-import el.itcompany.building.DefaultBuilding;
-import el.itcompany.inventory.DefaultItem;
-import el.itcompany.sectors.IT_Sector;
-import org.junit.jupiter.api.Test;
-
-import static el.itcompany.building.DefaultBuilding.BuildingType.Office;
-import static org.junit.jupiter.api.Assertions.*;
-
 public class TestManager {
     /*
     Position SWE = new Position(100000, "Software Dev", 2);

@@ -1,4 +1,4 @@
-package el.itcompany.tasks;
+package el.itcompany.entities.tasks;
 
 public class DefaultTask implements Task {
     String name;

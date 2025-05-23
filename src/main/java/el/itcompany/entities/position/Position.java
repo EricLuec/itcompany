@@ -1,4 +1,4 @@
-package el.itcompany.entities.people;
+package el.itcompany.entities.position;
 
 public class Position {
     int salary;

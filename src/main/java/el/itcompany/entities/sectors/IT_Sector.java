@@ -1,4 +1,4 @@
-package el.itcompany.sectors;
+package el.itcompany.entities.sectors;
 
 public class IT_Sector implements  DefaultSector {
     String name;

@@ -1,5 +1,5 @@
-package el.itcompany.sectors;
+package el.itcompany.entities.sectors;
 
 public interface DefaultSector {
-    boolean confidential();
+
 }

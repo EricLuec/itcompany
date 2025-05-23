@@ -1,9 +1,10 @@
-package el.itcompany.people;
+package el.itcompany.entities.people;
 
-import el.itcompany.building.DefaultBuilding;
-import el.itcompany.inventory.DefaultItem;
-import el.itcompany.inventory.Item;
-import el.itcompany.sectors.IT_Sector;
+import el.itcompany.entities.building.DefaultBuilding;
+import el.itcompany.entities.inventory.DefaultItem;
+import el.itcompany.entities.inventory.Item;
+import el.itcompany.entities.position.Position;
+import el.itcompany.entities.sectors.IT_Sector;
 
 import java.util.ArrayList;
 

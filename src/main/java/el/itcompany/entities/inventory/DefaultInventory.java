@@ -1,9 +1,9 @@
-package el.itcompany.inventory;
+package el.itcompany.entities.inventory;
 
-import el.itcompany.building.DefaultBuilding;
+import el.itcompany.entities.building.DefaultBuilding;
 import el.itcompany.exceptions.ItemNotFound;
-import el.itcompany.people.Manager;
-import el.itcompany.people.Person;
+import el.itcompany.entities.people.Manager;
+import el.itcompany.entities.people.Person;
 
 import java.util.ArrayList;
 

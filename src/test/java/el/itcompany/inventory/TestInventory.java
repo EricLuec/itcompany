@@ -1,13 +1,5 @@
 package el.itcompany.inventory;
 
-import el.itcompany.building.DefaultBuilding;
-import el.itcompany.people.Manager;
-import el.itcompany.people.Position;
-import el.itcompany.sectors.IT_Sector;
-import org.junit.jupiter.api.Test;
-
-import static el.itcompany.building.DefaultBuilding.BuildingType.Office;
-
 public class TestInventory {
     /*
     Position SWE = new Position(100000, "Software Dev", 2);

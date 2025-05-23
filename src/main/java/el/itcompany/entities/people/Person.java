@@ -1,6 +1,4 @@
-package el.itcompany.people;
-
-import java.util.ArrayList;
+package el.itcompany.entities.people;
 
 public interface Person {
 

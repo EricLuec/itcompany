@@ -1,18 +1,20 @@
-package el.itcompany.building;
+package el.itcompany.entities.building;
 
-public class DefaultBuilding implements Building {
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "building")
+public class DefaultBuilding {
+
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "houseNumber")
     int houseNumber;
-    String name;
-    public enum BuildingType {
-        Office,
-        Storage,
-        ConferenceHall
-    }
 
-    public DefaultBuilding(int houseNumber, String name, BuildingType type) {
-        this.houseNumber = houseNumber;
-        this.name = name;
-    }
+    @Column(name = "buildingName")
+    String name;
 
     public int getHouseNumber() {
         return houseNumber;

@@ -1,6 +1,6 @@
-package el.itcompany.inventory;
+package el.itcompany.entities.inventory;
 
-import el.itcompany.people.Person;
+import el.itcompany.entities.people.Person;
 
 public interface Inventory {
     void getItems();
