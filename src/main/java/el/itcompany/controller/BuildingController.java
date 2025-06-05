@@ -2,19 +2,20 @@ package el.itcompany.controller;
 
 import el.itcompany.entities.building.DefaultBuilding;
 import el.itcompany.services.BuildingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@RequestMapping("/building")
+@RequiredArgsConstructor
 public class BuildingController {
 
-    @Autowired
-    private BuildingService buildingService;
+    private final BuildingService buildingService;
 
-    @GetMapping("/building/create")
-    public String createBuilding(@ModelAttribute("building") DefaultBuilding building) {
+    @GetMapping("/create")
+    public String createBuilding(DefaultBuilding building) {
         buildingService.newBuilding(building);
         return "redirect:/";
     }
