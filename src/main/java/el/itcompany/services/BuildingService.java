@@ -1,9 +1,8 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.building.DefaultBuilding;
+import el.itcompany.entities.building.Building;
 import el.itcompany.repositories.BuildingRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +12,10 @@ import java.util.List;
 public class BuildingService {
     private final BuildingRepository buildingRepository;
 
-    public void newBuilding(DefaultBuilding building) {
+    public void newBuilding(Building building) {
         this.buildingRepository.save(building);
     }
-    public List<DefaultBuilding> findAll() {
+    public List<Building> findAll() {
         return this.buildingRepository.findAll();
     }
 }

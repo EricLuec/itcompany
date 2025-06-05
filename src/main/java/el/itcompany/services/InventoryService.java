@@ -1,6 +1,5 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.inventory.DefaultInventory;
 import el.itcompany.entities.inventory.Inventory;
 import el.itcompany.repositories.InventoryRepository;
 import lombok.RequiredArgsConstructor;

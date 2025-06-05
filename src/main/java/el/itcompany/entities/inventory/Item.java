@@ -1,50 +1,22 @@
 package el.itcompany.entities.inventory;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Item {
+@Getter
+@Setter
+public class Item implements Serializable {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     public String name;
-    int purchaseCost;
-    boolean available;
-
-    public boolean getAvailable() {
-        return this.available;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public void setPurchaseCost(int purchaseCost) {
-        this.purchaseCost = purchaseCost;
-    }
-
-    public int getPurchaseCost() {
-        return this.purchaseCost;
-    }
+    public int purchaseCost;
+    public boolean available;
 
 }

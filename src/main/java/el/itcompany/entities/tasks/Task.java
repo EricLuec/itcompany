@@ -4,28 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class DefaultTask implements Task {
+@Getter
+@Setter
+public class Task {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy =  GenerationType.TABLE)
     String name;
     int duration;
     int complexity;
 
-    @Override
-    public int getDuration() {
-        return this.duration;
-    }
-
-    @Override
-    public int getComplexity() {
-        return this.complexity;
-    }
 }

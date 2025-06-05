@@ -1,23 +1,17 @@
 package el.itcompany.entities.sectors;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IT_Sector implements  DefaultSector {
+@Getter
+@Setter
+public class DefaultSector {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy =  GenerationType.TABLE)
     String name;
 
-    public boolean confidential() {
-        return true;
-    }
 }

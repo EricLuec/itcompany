@@ -1,13 +1,14 @@
 package el.itcompany.entities.people;
 
-import el.itcompany.entities.building.DefaultBuilding;
+import el.itcompany.entities.building.Building;
 import el.itcompany.entities.inventory.Item;
 import el.itcompany.entities.position.Position;
-import el.itcompany.entities.sectors.IT_Sector;
+import el.itcompany.entities.sectors.DefaultSector;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,40 +16,45 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DefaultPerson implements Person {
+public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
+
+    @Column(name = "age")
     private int age;
+
+    @Column(name = "name")
     String name;
+
     @Transient
+    @Column(name = "position")
     Position position;
+
     @Transient
+    @Column(name = "manager")
     Manager manager;
-    ArrayList<Item> itemsInPosession = new ArrayList<>();
+
     @Transient
-    IT_Sector sector;
+    @Column(name = "items_in_posession")
+    List<Item> itemsInPosession;
+
     @Transient
-    DefaultBuilding workPlace;
+    @Column(name = "sector")
+    DefaultSector sector;
+
+    @Transient
+    @Column(name = "workPlace")
+    Building workPlace;
+
+    @Column
     ArrayList<String> complaints = new ArrayList<>();
 
-    @Override
     public String reportPerson(String message) {
         this.complaints.add(message);
         return message;
     }
 
-    @Override
-    public boolean isOpenForWork() {
-        return false;
-    }
-
-    @Override
-    public Manager getManager() {
-        return this.manager;
-    }
-
-    @Override
     public void listItemsInPosession() {
         if (!this.itemsInPosession.isEmpty()) {
             System.out.println("There are no items in posession");
@@ -57,5 +63,4 @@ public class DefaultPerson implements Person {
             System.out.println(i);
         }
     }
-
 }

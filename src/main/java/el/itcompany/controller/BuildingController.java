@@ -1,6 +1,6 @@
 package el.itcompany.controller;
 
-import el.itcompany.entities.building.DefaultBuilding;
+import el.itcompany.entities.building.Building;
 import el.itcompany.services.BuildingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ public class BuildingController {
     private final BuildingService buildingService;
 
     @GetMapping("/create")
-    public String createBuilding(DefaultBuilding building) {
+    public String createBuilding(Building building) {
         buildingService.newBuilding(building);
         return "redirect:/";
     }
