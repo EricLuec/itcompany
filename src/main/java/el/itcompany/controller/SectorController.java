@@ -1,6 +1,5 @@
 package el.itcompany.controller;
 
-import el.itcompany.entities.people.Person;
 import el.itcompany.entities.sectors.DefaultSector;
 import el.itcompany.services.SectorService;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,6 @@ import el.itcompany.entities.people.Manager;
 import el.itcompany.entities.people.Person;
 
 import java.util.ArrayList;
-
 import jakarta.persistence.*;
 import lombok.*;
 
