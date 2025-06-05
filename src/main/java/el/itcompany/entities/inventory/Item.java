@@ -12,14 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DefaultItem implements Item {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String name;
     int purchaseCost;
     boolean available;
 
-    @Override
     public boolean getAvailable() {
         return this.available;
     }
@@ -44,7 +43,6 @@ public class DefaultItem implements Item {
         this.purchaseCost = purchaseCost;
     }
 
-    @Override
     public int getPurchaseCost() {
         return this.purchaseCost;
     }

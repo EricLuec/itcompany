@@ -18,7 +18,6 @@ public class DefaultBuilding {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private long id;
 
     @Column(name = "houseNumber")
     int houseNumber;

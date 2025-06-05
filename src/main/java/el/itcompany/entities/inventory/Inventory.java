@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DefaultInventory implements Inventory {
+public class Inventory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

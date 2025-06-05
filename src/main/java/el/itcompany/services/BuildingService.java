@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BuildingService {
@@ -13,5 +15,8 @@ public class BuildingService {
 
     public void newBuilding(DefaultBuilding building) {
         this.buildingRepository.save(building);
+    }
+    public List<DefaultBuilding> findAll() {
+        return this.buildingRepository.findAll();
     }
 }

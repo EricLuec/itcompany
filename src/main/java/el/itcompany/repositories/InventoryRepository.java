@@ -1,7 +1,11 @@
 package el.itcompany.repositories;
 
+import el.itcompany.entities.inventory.DefaultInventory;
 import el.itcompany.entities.inventory.Inventory;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface InventoryRepository extends CrudRepository<Inventory, Integer> {
+@Repository
+public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 }

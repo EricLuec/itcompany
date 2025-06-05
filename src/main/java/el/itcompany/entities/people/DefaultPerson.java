@@ -38,6 +38,14 @@ public class DefaultPerson implements Person {
         return message;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean isOpenForWork() {
         return false;
@@ -54,7 +62,7 @@ public class DefaultPerson implements Person {
             System.out.println("There are no items in posession");
         }
         for (Item i : this.itemsInPosession) {
-            System.out.println(i.getItem());
+            System.out.println(i);
         }
     }
 

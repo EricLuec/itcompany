@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonController {
     private final PersonService personService;
-    private final PeopleRepository peopleRepository;
 
     @GetMapping("/create")
     public String newPerson(Person person) {
@@ -27,7 +26,7 @@ public class PersonController {
 
     @GetMapping
     public String listPeople() {
-        List<Person> employees = peopleRepository.findAll();
+        List<Person> employees = personService.findAll();
         return employees.toString();
     }
 
