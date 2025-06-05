@@ -2,13 +2,14 @@ package el.itcompany.services;
 
 import el.itcompany.entities.building.DefaultBuilding;
 import el.itcompany.repositories.BuildingRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class BuildingService {
-    @Autowired
-    private BuildingRepository buildingRepository;
+    private final BuildingRepository buildingRepository;
 
     public void newBuilding(DefaultBuilding building) {
         this.buildingRepository.save(building);

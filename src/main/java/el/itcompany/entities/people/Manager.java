@@ -5,6 +5,10 @@ import el.itcompany.entities.inventory.DefaultItem;
 import el.itcompany.entities.inventory.Item;
 import el.itcompany.entities.position.Position;
 import el.itcompany.entities.sectors.IT_Sector;
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 

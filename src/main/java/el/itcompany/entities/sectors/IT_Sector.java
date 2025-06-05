@@ -7,7 +7,6 @@ public class IT_Sector implements  DefaultSector {
         this.name = name;
     }
 
-    @Override
     public boolean confidential() {
         return true;
     }

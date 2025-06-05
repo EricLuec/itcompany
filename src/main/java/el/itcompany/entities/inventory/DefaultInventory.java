@@ -7,17 +7,26 @@ import el.itcompany.entities.people.Person;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class DefaultInventory implements Inventory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String name;
+    @Transient
     DefaultBuilding building;
+    @Transient
     Manager manager;
     ArrayList<Item> items = new ArrayList<>();
 
-    public DefaultInventory(String name, DefaultBuilding building, Manager manager) {
-        this.name = name;
-        this.building = building;
-        this.manager = manager;
-    }
 
     @Override
     public void getItems() {
@@ -53,7 +62,7 @@ public class DefaultInventory implements Inventory {
     public void breakItemOnPurpose(Item item, Person person) {
         items.remove(item);
         purchaseItem(item);
-        System.out.println("due to irresponsibility, your manager" + person.getManager() + " will be informed." );
+        System.out.println("due to irresponsibility, your manager" + person.getManager() + " will be informed.");
         person.reportPerson(item + "has been broken by " + person + " on purpose");
     }
 

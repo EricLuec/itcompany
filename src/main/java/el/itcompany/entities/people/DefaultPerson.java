@@ -4,39 +4,33 @@ import el.itcompany.entities.building.DefaultBuilding;
 import el.itcompany.entities.inventory.Item;
 import el.itcompany.entities.position.Position;
 import el.itcompany.entities.sectors.IT_Sector;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DefaultPerson implements Person {
-    int age;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int age;
     String name;
+    @Transient
     Position position;
+    @Transient
     Manager manager;
     ArrayList<Item> itemsInPosession = new ArrayList<>();
+    @Transient
     IT_Sector sector;
+    @Transient
     DefaultBuilding workPlace;
     ArrayList<String> complaints = new ArrayList<>();
-
-    public DefaultPerson(int age, String name, Position position, Manager manager, IT_Sector sector, DefaultBuilding workPlace, ArrayList<String> complaints, ArrayList<Item> itemsInPosession) {
-        this.age = age;
-        this.name = name;
-        this.position = position;
-        this.manager = manager;
-        this.sector = sector;
-        this.workPlace = workPlace;
-        this.complaints = complaints;
-        this.itemsInPosession = itemsInPosession;
-    }
-
-    public DefaultPerson(int age, String name, Position position, IT_Sector sector, DefaultBuilding workPlace, ArrayList<String> complaints, ArrayList<Item> itemsInPosession) {
-        this.age = age;
-        this.name = name;
-        this.position = position;
-        this.sector = sector;
-        this.workPlace = workPlace;
-        this.complaints = complaints;
-        this.itemsInPosession = itemsInPosession;
-    }
 
     @Override
     public String reportPerson(String message) {

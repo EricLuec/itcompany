@@ -1,14 +1,22 @@
 package el.itcompany.entities.position;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Position {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int salary;
     String desctiption;
     int salaryClass;
 
-    public Position(int salary, String desctiption, int salaryClass) {
-        this.salary = salary;
-        this.desctiption = desctiption;
-        this.salaryClass = salaryClass;
-
-    }
 }
