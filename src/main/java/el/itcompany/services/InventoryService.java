@@ -1,7 +1,7 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.Project;
-import el.itcompany.repositories.ProjectRepository;
+import el.itcompany.entities.Inventory;
+import el.itcompany.repositories.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,35 +14,35 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
 
-    public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+    public List<Inventory> getAllInventory() {
+        return inventoryRepository.findAll();
     }
 
-    public Optional<Project> getProjectById(Long id) {
-        return projectRepository.findById(id);
+    public Optional<Inventory> getInventoryById(Long id) {
+        return inventoryRepository.findById(id);
     }
 
-    public Project createProject(Project project) {
-        return projectRepository.save(project);
+    public Inventory createInventory(Inventory inventory) {
+        return inventoryRepository.save(inventory);
     }
 
-    public Project updateProject(Long id, Project projectDetails) {
-        return projectRepository.findById(id)
-                .map(project -> {
-                    project.setName(projectDetails.getName());
+    public Inventory updateInventory(Long id, Inventory inventoryDetails) {
+        return inventoryRepository.findById(id)
+                .map(inventory -> {
+                    inventory.setName(inventoryDetails.getName());
                     //project.setStartDate(projectDetails.getStartDate());
                     //project.setEndDate(projectDetails.getEndDate());
                     //project.setBudget(projectDetails.getBudget());
                     // project.setStatus(projectDetails.getStatus());
                     // project.setCustomer(projectDetails.getCustomer());
                     // project.setEmployees(projectDetails.getEmployees());
-                    return projectRepository.save(project);
+                    return inventoryRepository.save(inventory);
                 })
                 .orElseThrow(() -> new RuntimeException("Project not found"));
     }
 
-    public void deleteProject(Long id) {
-        projectRepository.deleteById(id);
+    public void deleteInventory(Long id) {
+        inventoryRepository.deleteById(id);
     }
 
 }
