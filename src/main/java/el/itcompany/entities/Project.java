@@ -1,19 +1,17 @@
 package el.itcompany.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@Getter
+@Setter
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     enum ProjectStatus {
@@ -22,8 +20,6 @@ public class Project {
     /*
     @ManyToOne
     private Customer customer;
-
-
 
     @ManyToMany
     private List<Employee> employees;

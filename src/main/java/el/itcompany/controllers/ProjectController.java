@@ -1,4 +1,4 @@
-package el.itcompany.controller;
+package el.itcompany.controllers;
 
 import el.itcompany.entities.Project;
 import el.itcompany.services.ProjectService;
@@ -23,7 +23,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<> getProjectById(@PathVariable Long id) {
+    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<> updateProject(@PathVariable Long id, @RequestBody Project project) {
+    public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
         try {
             return ResponseEntity.ok(projectService.updateProject(id, project));
         } catch (RuntimeException e) {
