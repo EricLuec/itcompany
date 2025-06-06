@@ -1,9 +1,8 @@
 package el.itcompany.services;
 
 import el.itcompany.entities.people.Person;
-import el.itcompany.repositories.PeopleRepository;
+import el.itcompany.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class PersonService {
-    private final PeopleRepository peopleRepository;
+    private final EmployeeRepository peopleRepository;
 
     public void newPerson(Person person) {
         this.peopleRepository.save(person);
