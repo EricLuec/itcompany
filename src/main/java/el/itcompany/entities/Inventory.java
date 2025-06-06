@@ -1,0 +1,31 @@
+package el.itcompany.entities;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+@Entity
+@Getter
+@Setter
+public class Inventory {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String description;
+
+    @Transient
+    private Building building;
+
+    @Transient
+    private Employee responsibleEmployee;
+
+    private List<String> items = new ArrayList<>();
+    private int generalValue;
+
+}

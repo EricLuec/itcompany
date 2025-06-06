@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectService {
+public class InventoryService {
 
-    private final ProjectRepository projectRepository;
+    private final InventoryRepository inventoryRepository;
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
