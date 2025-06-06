@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,6 +15,11 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String description;
+    private String manager;
+    private LocalDate creationDate;
+    private List<String> workerList;
+
     enum ProjectStatus {
         PLANNED, ACTIVE, COMPLETED
     }
