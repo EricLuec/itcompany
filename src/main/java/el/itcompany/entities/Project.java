@@ -26,10 +26,10 @@ public class Project {
     /*
     @ManyToOne
     private Customer customer;
-
+*/
     @ManyToMany
     private List<Employee> employees;
-*/
+
     private LocalDate startDate;
     private LocalDate endDate;
     private int budget;
