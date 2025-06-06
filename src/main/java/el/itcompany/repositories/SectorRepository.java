@@ -1,9 +1,9 @@
 package el.itcompany.repositories;
 
-import el.itcompany.entities.sectors.DefaultSector;
+import el.itcompany.entities.sectors.Sector;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SectorRepository extends JpaRepository<DefaultSector, Long> {
+public interface SectorRepository extends JpaRepository<Sector, Long> {
 }

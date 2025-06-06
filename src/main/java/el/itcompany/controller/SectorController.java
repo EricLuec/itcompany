@@ -1,6 +1,6 @@
 package el.itcompany.controller;
 
-import el.itcompany.entities.sectors.DefaultSector;
+import el.itcompany.entities.sectors.Sector;
 import el.itcompany.services.SectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ public class SectorController {
 
     @GetMapping
     public String listPeople() {
-        List<DefaultSector> employees = sectorService.findAll();
+        List<Sector> employees = sectorService.findAll();
         return employees.toString();
     }
 }

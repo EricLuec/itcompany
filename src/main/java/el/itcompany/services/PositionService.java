@@ -1,6 +1,5 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.people.Person;
 import el.itcompany.entities.position.Position;
 import el.itcompany.repositories.PositionRepository;
 import lombok.RequiredArgsConstructor;

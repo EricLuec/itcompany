@@ -7,11 +7,12 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-public class DefaultSector {
+@Builder
+public class Sector {
     @Id
-    @GeneratedValue(strategy =  GenerationType.TABLE)
-    String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    private String name;
+    private String salaryClass;  // z.B. "A", "B", "C" etc.
 }

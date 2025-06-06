@@ -1,66 +1,33 @@
 package el.itcompany.entities.people;
 
 import el.itcompany.entities.building.Building;
-import el.itcompany.entities.inventory.Item;
 import el.itcompany.entities.position.Position;
-import el.itcompany.entities.sectors.DefaultSector;
+import el.itcompany.entities.sectors.Sector;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
-public class Person {
-
+public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "age")
-    private int age;
+    private String vorname;
+    private String nachname;
+    private String email;
 
-    @Column(name = "name")
-    String name;
+    @ManyToOne
+    private Building building;
 
-    @Transient
-    @Column(name = "position")
-    Position position;
+    @ManyToOne
+    private Position position;
 
-    @Transient
-    @Column(name = "manager")
-    Manager manager;
-
-    @Transient
-    @Column(name = "items_in_posession")
-    List<Item> itemsInPosession;
-
-    @Transient
-    @Column(name = "sector")
-    DefaultSector sector;
-
-    @Transient
-    @Column(name = "workPlace")
-    Building workPlace;
-
-    @Column
-    ArrayList<String> complaints = new ArrayList<>();
-
-    public String reportPerson(String message) {
-        this.complaints.add(message);
-        return message;
-    }
-
-    public void listItemsInPosession() {
-        if (!this.itemsInPosession.isEmpty()) {
-            System.out.println("There are no items in posession");
-        }
-        for (Item i : this.itemsInPosession) {
-            System.out.println(i);
-        }
-    }
+    @ManyToOne
+    private Sector sector;
 }
