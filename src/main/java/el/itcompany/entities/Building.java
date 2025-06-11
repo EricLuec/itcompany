@@ -20,7 +20,8 @@ public class Building {
     private String description;
     private String city;
     private int capacity;
-    // manytomany??
+
+    @ManyToMany
     private List<Sector> sectorList;
     private LocalDate buildingDate;
 }
