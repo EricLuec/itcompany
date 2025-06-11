@@ -1,6 +1,7 @@
 package el.itcompany.services;
 
 import el.itcompany.entities.Inventory;
+import el.itcompany.entities.Item;
 import el.itcompany.repositories.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,4 +46,23 @@ public class InventoryService {
         inventoryRepository.deleteById(id);
     }
 
+    public Inventory addItemToInventory(Long inventoryId, Item item) {
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        inventory.getItems().add(item);
+        return inventoryRepository.save(inventory);
+    }
+
+    public Inventory removeItemFromInventory(Long inventoryId, Long itemId) {
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        inventory.getItems().removeIf(item -> item.getId().equals(itemId));
+        return inventoryRepository.save(inventory);
+    }
+
+    public List<Item> getItemsOfInventory(Long inventoryId) {
+        Inventory inventory = inventoryRepository.findById(inventoryId)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        return inventory.getItems();
+    }
 }

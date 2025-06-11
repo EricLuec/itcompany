@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -17,6 +18,7 @@ public class Inventory {
     private Long id;
     private String name;
     private String description;
+    private LocalDate createdDate;
 
     @Transient
     private Building building;
@@ -26,6 +28,7 @@ public class Inventory {
 
     @ManyToMany
     private List<Item> items;
+
     private int generalValue;
 
 }

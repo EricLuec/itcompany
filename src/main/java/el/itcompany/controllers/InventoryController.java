@@ -1,6 +1,7 @@
 package el.itcompany.controllers;
 
 import el.itcompany.entities.Inventory;
+import el.itcompany.entities.Item;
 import el.itcompany.services.InventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +49,20 @@ public class InventoryController {
         inventoryService.deleteInventory(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{inventoryId}/items")
+    public ResponseEntity<Inventory> addItem(@PathVariable Long inventoryId, @RequestBody Item item) {
+        return ResponseEntity.ok(inventoryService.addItemToInventory(inventoryId, item));
+    }
+
+    @DeleteMapping("/{inventoryId}/items/{itemId}")
+    public ResponseEntity<Inventory> removeItem(@PathVariable Long inventoryId, @PathVariable Long itemId) {
+        return ResponseEntity.ok(inventoryService.removeItemFromInventory(inventoryId, itemId));
+    }
+
+    @GetMapping("/{inventoryId}/items")
+    public ResponseEntity<List<Item>> getItems(@PathVariable Long inventoryId) {
+        return ResponseEntity.ok(inventoryService.getItemsOfInventory(inventoryId));
+    }
+
 }
