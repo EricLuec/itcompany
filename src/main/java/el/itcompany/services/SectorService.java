@@ -1,8 +1,6 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.Project;
 import el.itcompany.entities.Sector;
-import el.itcompany.repositories.ProjectRepository;
 import el.itcompany.repositories.SectorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

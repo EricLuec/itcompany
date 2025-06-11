@@ -7,6 +7,6 @@ public class MainTest {
 
     @Test
     public void testMainMethodExists() {
-        assertDoesNotThrow(() -> App.main(new String[0]));
+        assertDoesNotThrow(() -> ITCompany.main(new String[0]));
     }
 }

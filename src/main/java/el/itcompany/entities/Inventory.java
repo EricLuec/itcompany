@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -25,7 +24,8 @@ public class Inventory {
     @Transient
     private Employee responsibleEmployee;
 
-    private List<String> items = new ArrayList<>();
+    @ManyToMany
+    private List<Item> items;
     private int generalValue;
 
 }
