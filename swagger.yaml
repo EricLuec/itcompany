@@ -1,0 +1,56 @@
+openapi: 3.0.4
+info:
+  title: IT-Company - OpenAPI 3.0
+  description: |-
+    This is a sample IT-Company.
+  license:
+    name: GNU Affero General Public License
+    url: https://www.gnu.org/licenses/agpl-3.0.html
+  version: 3.0.0
+  servers:
+    - url: 'http://localhost:8080'
+tags:
+  - name: building
+    description: Everything about the company's buildings
+  - name: employee
+    description: View and manage the company's employees
+  - name: inventory
+    description: Operations about the company's inventories
+  - name: item
+    description: Operations about the items that the company owns
+  - name: project
+    description: Operations about the company's projects
+  - name: sector
+    description: Operations about the sectors that the company covers
+paths:
+  /pet:
+    put:
+      tags:
+        - building
+      summary: Update an existing building.
+      description: Update an existing building by Id.
+      operationId: updateBuilding
+      requestBody:
+        description: Update an existent building owned by the company.
+        content:
+          application/json:
+            schema:
+           #   $ref: '#/components/schemas/Building'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+               # $ref: '#/components/schemas/Building'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Building not found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+
+  # /pet/findByStatus:
