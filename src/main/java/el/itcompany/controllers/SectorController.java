@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping("/sectors")
 public class SectorController {
 
     private final SectorService sectorService;
 
-    public SectorController(SectorService projectService) {
-        this.sectorService = projectService;
+    public SectorController(SectorService sectorService) {
+        this.sectorService = sectorService;
     }
 
     @GetMapping
@@ -44,7 +44,7 @@ public class SectorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteSector(@PathVariable Long id) {
         sectorService.deleteSector(id);
         return ResponseEntity.noContent().build();
     }

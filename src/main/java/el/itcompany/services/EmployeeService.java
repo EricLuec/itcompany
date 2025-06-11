@@ -42,7 +42,7 @@ public class EmployeeService {
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
-    public void deleteInventory(Long id) {
+    public void deleteEmployee(Long id) {
         employeeRepository.deleteById(id);
     }
 
