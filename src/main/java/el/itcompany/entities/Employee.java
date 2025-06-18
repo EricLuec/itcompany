@@ -29,6 +29,6 @@ public class Employee {
     private LocalDate hireDate;
     // private LocalDate vacation;
     private List<String> warnings;
-    private List<String> items;
+    private List<Item> items;
 
 }

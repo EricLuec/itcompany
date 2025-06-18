@@ -1,6 +1,7 @@
 package el.itcompany.controllers;
 
 import el.itcompany.entities.Building;
+import el.itcompany.entities.Sector;
 import el.itcompany.services.BuildingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,24 @@ public class BuildingController {
     public ResponseEntity<Building> updateBuilding(@PathVariable Long id, @RequestBody Building building) {
         try {
             return ResponseEntity.ok(buildingService.updateBuilding(id, building));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/addSector")
+    public ResponseEntity<Building> addSectorToBuilding(@PathVariable Long id, @RequestBody Sector sector) {
+        try {
+            return ResponseEntity.ok(buildingService.addSectorToBuilding(id, sector));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/removeSector")
+    public ResponseEntity<Building> removeSectorFromBuilding(@PathVariable Long id, @RequestBody Sector sector) {
+        try {
+            return ResponseEntity.ok(buildingService.removeSectorFromBuilding(id, sector));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

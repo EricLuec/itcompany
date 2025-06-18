@@ -52,4 +52,11 @@ public class BuildingService {
             return buildingRepository.save(building);
         }).orElseThrow(() -> new RuntimeException("Sector or Building not found"));
     }
+
+    public Building removeSectorFromBuilding(Long id, Sector sector) {
+        return buildingRepository.findById(id).map(building -> {
+            building.getSectorList().remove(sector);
+            return buildingRepository.save(building);
+        }).orElseThrow(() -> new RuntimeException("Sector or Building not found"));
+    }
 }
