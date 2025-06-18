@@ -50,19 +50,19 @@ public class InventoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{inventoryId}/items")
-    public ResponseEntity<Inventory> addItem(@PathVariable Long inventoryId, @RequestBody Item item) {
-        return ResponseEntity.ok(inventoryService.addItemToInventory(inventoryId, item));
+    @PostMapping("/{id}/items")
+    public ResponseEntity<Inventory> addItem(@PathVariable Long id, @RequestBody Item item) {
+        return ResponseEntity.ok(inventoryService.addItemToInventory(id, item));
     }
 
-    @DeleteMapping("/{inventoryId}/items/{itemId}")
-    public ResponseEntity<Inventory> removeItem(@PathVariable Long inventoryId, @PathVariable Long itemId) {
-        return ResponseEntity.ok(inventoryService.removeItemFromInventory(inventoryId, itemId));
+    @DeleteMapping("/{id}/items/{itemId}")
+    public ResponseEntity<Inventory> removeItem(@PathVariable Long id, @PathVariable Long itemId) {
+        return ResponseEntity.ok(inventoryService.removeItemFromInventory(id, itemId));
     }
 
-    @GetMapping("/{inventoryId}/items")
-    public ResponseEntity<List<Item>> getItems(@PathVariable Long inventoryId) {
-        return ResponseEntity.ok(inventoryService.getItemsOfInventory(inventoryId));
+    @GetMapping("/{id}/items")
+    public ResponseEntity<List<Item>> getItems(@PathVariable Long id) {
+        return ResponseEntity.ok(inventoryService.getItemsOfInventory(id));
     }
 
 }

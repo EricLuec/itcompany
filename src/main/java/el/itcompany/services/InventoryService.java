@@ -1,5 +1,6 @@
 package el.itcompany.services;
 
+import el.itcompany.entities.Employee;
 import el.itcompany.entities.Inventory;
 import el.itcompany.entities.Item;
 import el.itcompany.repositories.InventoryRepository;
@@ -64,5 +65,13 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
         return inventory.getItems();
+    }
+
+    public Inventory setNewResponsibleEmployee(Long inventoryId, Employee responsibleEmployee) {
+        return inventoryRepository.findById(inventoryId).map(
+                inventory -> {
+                    inventory.setResponsibleEmployee(responsibleEmployee);
+                    return inventoryRepository.save(inventory);
+                }).orElseThrow(() -> new RuntimeException("Project not found"));
     }
 }

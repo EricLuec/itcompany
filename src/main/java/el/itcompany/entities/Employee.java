@@ -27,8 +27,9 @@ public class Employee {
     private String manager;
     private List<String> complaints;
     private LocalDate hireDate;
-    // private LocalDate vacation;
     private List<String> warnings;
+
+    @ManyToMany
     private List<Item> items;
 
 }

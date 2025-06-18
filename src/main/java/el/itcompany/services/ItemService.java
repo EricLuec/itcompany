@@ -28,15 +28,15 @@ public class ItemService {
 
     public Item updateItem(Long id, Item itemDetails) {
         return itemRepository.findById(id)
-                .map(sector -> {
-                    sector.setName(itemDetails.getName());
+                .map(item -> {
+                    item.setName(itemDetails.getName());
                     //project.setStartDate(projectDetails.getStartDate());
                     //project.setEndDate(projectDetails.getEndDate());
                     //project.setBudget(projectDetails.getBudget());
                     // project.setStatus(projectDetails.getStatus());
                     // project.setCustomer(projectDetails.getCustomer());
                     // project.setEmployees(projectDetails.getEmployees());
-                    return itemRepository.save(sector);
+                    return itemRepository.save(item);
                 })
                 .orElseThrow(() -> new RuntimeException("Item not found"));
     }
