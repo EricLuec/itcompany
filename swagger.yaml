@@ -1,8 +1,7 @@
-openapi: 3.0.4
+openapi: 3.1.0
 info:
   title: IT-Company - OpenAPI 3.0
-  description: |-
-    This is a sample IT-Company.
+  description: This is a sample IT-Company.
   license:
     name: GNU Affero General Public License
     url: https://www.gnu.org/licenses/agpl-3.0.html
@@ -23,59 +22,565 @@ tags:
   - name: sector
     description: Operations about the sectors that the company covers
 paths:
-  /building/{id}:
-    put:
-      tags:
-        - building
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      summary: Update an existing building.
-      description: Update an existing building by Id.
-      operationId: updateBuilding
-      requestBody:
-        description: Update an existent building owned by the company.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Building'
-        required: true
+  /sectors:
+     get:
+      summary: Get all sectors
       responses:
         '200':
-          description: Successful operation
+          description: List of sectors
           content:
             application/json:
               schema:
-               $ref: '#/components/schemas/Building'
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Building not found
-        '422':
-          description: Validation exception
-        default:
-          description: Unexpected error
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sector'
     post:
-      tags:
-        - building
-      summary: Create a new building.
-      description: Create a new building.
-      operationId: createBuilding
+      summary: Create a new sector
       requestBody:
-        description: Create a new building
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sector'
+      responses:
+        '200':
+          description: Sector created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+  /sectors/{id}:
+    get:
+      summary: Get sector by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sector found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+        '404':
+          description: Sector not found
+    put:
+      summary: Update a sector by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sector'
+      responses:
+        '200':
+          description: Sector updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+        '404':
+          description: Sector not found
+    delete:
+      summary: Delete sector by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Sector deleted
+  /buildings:
+    get:
+      summary: Get all buildings
+      responses:
+        '200':
+          description: List of buildings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Building'
+    post:
+      summary: Create a new building
+      requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Building'
+      responses:
+        '200':
+          description: Building created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+  /buildings/{id}:
+    get:
+      summary: Get building by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Building found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '404':
+          description: Building not found
+    put:
+      summary: Update a building by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+      responses:
+        '200':
+          description: Building updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        '404':
+          description: Building not found
+    delete:
+      summary: Delete building by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Building deleted
+  /employees:
+    get:
+      summary: Get all employees
+      responses:
+        '200':
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Employee'
+    post:
+      summary: Create a new employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: Employee created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  /employees/{id}:
+    get:
+      summary: Get employee by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Employee found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          description: Employee not found
+    put:
+      summary: Update an employee by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        '200':
+          description: Employee updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        '404':
+          description: Employee not found
+    delete:
+      summary: Delete employee by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Employee deleted
+  /inventory:
+    get:
+      summary: Get all inventories
+      responses:
+        '200':
+          description: List of inventories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Inventory'
+    post:
+      summary: Create a new inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        '200':
+          description: Inventory created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+  /inventory/{id}:
+    get:
+      summary: Get inventory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Inventory found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '404':
+          description: Inventory not found
+    put:
+      summary: Update inventory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Inventory'
+      responses:
+        '200':
+          description: Inventory updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '404':
+          description: Inventory not found
+    delete:
+      summary: Delete inventory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Inventory deleted
+  /inventory/{inventoryId}/items:
+    get:
+      summary: Get items of an inventory
+      parameters:
+        - name: inventoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    post:
+      summary: Add item to inventory
+      parameters:
+        - name: inventoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+  /inventory/{inventoryId}/items/{itemId}:
+    delete:
+      summary: Remove item from inventory
+      parameters:
+        - name: inventoryId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Updated inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+  /items:
+    get:
+      summary: Get all items
+      responses:
+        '200':
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    post:
+      summary: Create a new item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+  /items/{id}:
+    get:
+      summary: Get item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Item not found
+    put:
+      summary: Update item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Item not found
+    delete:
+      summary: Delete item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Item deleted
+  /projects:
+    get:
+      summary: Get all projects
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /projects/{id}:
+    get:
+      summary: Get project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    put:
+      summary: Update project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    delete:
+      summary: Delete project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Project deleted
 components:
   schemas:
+    Sector:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        salaryClass:
+          type: string
+          enum: [ A, B, C, D ]
+      required:
+        - name
+        - description
+        - salaryClass
     Building:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         name:
           type: string
         description:
@@ -84,21 +589,142 @@ components:
           type: string
         capacity:
           type: integer
-      additionalProperties: false
+        sectorList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sector'
+        buildingDate:
+          type: string
+          format: date
       required:
-        - title
-        - description
+        - name
         - city
         - capacity
-    BuildingResponsePayload:
+        - buildingDate
+    Employee:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        salary:
+          type: integer
+        sector:
+          $ref: '#/components/schemas/Sector'
+        manager:
+          type: string
+        complaints:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string
+        items:
+          type: array
+          items:
+            type: string
+        hireDate:
+          type: string
+          format: date
+      required:
+        - firstName
+        - lastName
+        - email
+        - salary
+        - hireDate
+    Inventory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
         name:
           type: string
         description:
           type: string
-        city:
+        createdDate:
           type: string
-        capacity:
+          format: date
+        building:
+          $ref: '#/components/schemas/Building'
+        responsibleEmployee:
+          $ref: '#/components/schemas/Employee'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        generalValue:
           type: integer
-      additionalProperties: false
+      required:
+        - name
+        - createdDate
+        - generalValue
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        price:
+          type: integer
+        purchaseDate:
+          type: string
+          format: date
+      required:
+        - name
+        - price
+        - purchaseDate
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        manager:
+          type: string
+        creationDate:
+          type: string
+          format: date
+        workerList:
+          type: array
+          items:
+            type: string
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        budget:
+          type: integer
+        status:
+          type: string
+          enum: [ PLANNED, ACTIVE, COMPLETED ]
+      required:
+        - name
+        - manager
+        - budget
+        - status
