@@ -1,6 +1,7 @@
 package el.itcompany.services;
 
 import el.itcompany.entities.Building;
+import el.itcompany.entities.Sector;
 import el.itcompany.repositories.BuildingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,11 +39,17 @@ public class BuildingService {
                     // project.setEmployees(projectDetails.getEmployees());
                     return buildingRepository.save(building);
                 })
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new RuntimeException("Building not found"));
     }
 
     public void deleteBuilding(Long id) {
         buildingRepository.deleteById(id);
     }
 
+    public Building addSectorToBuilding(Long id, Sector sector) {
+        return buildingRepository.findById(id).map(building -> {
+            building.getSectorList().add(sector);
+            return buildingRepository.save(building);
+        }).orElseThrow(() -> new RuntimeException("Sector or Building not found"));
+    }
 }
