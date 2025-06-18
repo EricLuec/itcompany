@@ -23,10 +23,17 @@ tags:
   - name: sector
     description: Operations about the sectors that the company covers
 paths:
-  /pet:
+  /building/{id}:
     put:
       tags:
         - building
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
       summary: Update an existing building.
       description: Update an existing building by Id.
       operationId: updateBuilding
@@ -35,7 +42,7 @@ paths:
         content:
           application/json:
             schema:
-           #   $ref: '#/components/schemas/Building'
+              $ref: '#/components/schemas/Building'
         required: true
       responses:
         '200':
@@ -43,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-               # $ref: '#/components/schemas/Building'
+               $ref: '#/components/schemas/Building'
         '400':
           description: Invalid ID supplied
         '404':
@@ -52,5 +59,46 @@ paths:
           description: Validation exception
         default:
           description: Unexpected error
-
-  # /pet/findByStatus:
+    post:
+      tags:
+        - building
+      summary: Create a new building.
+      description: Create a new building.
+      operationId: createBuilding
+      requestBody:
+        description: Create a new building
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+components:
+  schemas:
+    Building:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        city:
+          type: string
+        capacity:
+          type: integer
+      additionalProperties: false
+      required:
+        - title
+        - description
+        - city
+        - capacity
+    BuildingResponsePayload:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        city:
+          type: string
+        capacity:
+          type: integer
+      additionalProperties: false
