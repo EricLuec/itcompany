@@ -1,3 +1,3 @@
 export default function HomePage() {
-  return <h2>Willkommen auf der Startseite!</h2>
+  return <h2 className={"text-center"}>Willkommen auf der Startseite!</h2>
 }
