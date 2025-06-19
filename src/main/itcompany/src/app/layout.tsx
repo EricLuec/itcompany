@@ -10,7 +10,7 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <html lang="de">
         <body className="bg-red-50 text-gray-800 font-sans">
         <Sidebar/>
-        <div className="ml-100% min-h-screen">
+        <div className="ml-100 min-h-screen">
             <main className="p-8">{children}</main>
         </div>
         </body>

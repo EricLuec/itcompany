@@ -4,9 +4,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
-    { name: 'Start', href: '/' },
-    // { name: 'Über', href: '/about' },
-    { name: 'Kontakt', href: '/contact' },
+    { name: 'Startseite', href: '/' },
+    { name: 'Employees', href: '/employees' },
+    { name: 'Sector', href: '/sector' },
+    { name: 'Inventory', href: '/inventory' },
+    { name: 'Buildings', href: '/building' },
 ]
 
 export default function Sidebar() {
