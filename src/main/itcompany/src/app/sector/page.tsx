@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 type SalaryClass = 'A' | 'B' | 'C' | 'D';
-
 type Sector = {
     id: number;
     name: string;
@@ -16,7 +15,6 @@ export default function SectorPage() {
     const [filtered, setFiltered] = useState<Sector[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Filterstates
     const [nameFilter, setNameFilter] = useState('');
     const [salaryFilter, setSalaryFilter] = useState<string>(''); // '' = Alle
 
@@ -51,12 +49,11 @@ export default function SectorPage() {
     }, [nameFilter, salaryFilter, data]);
 
     if (loading) {
-        return <div className="text-center py-10 text-gray-500">Lade Daten…</div>;
+        return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
     }
 
     return (
         <div className="p-6 space-y-6">
-            {/* Filter Card */}
             <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <div className="flex flex-wrap gap-4">
@@ -73,7 +70,7 @@ export default function SectorPage() {
                         value={salaryFilter}
                         onChange={(e) => setSalaryFilter(e.target.value)}
                     >
-                        <option value="">Alle Gehaltsklassen</option>
+                        <option value="">All Salary-Classes</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -82,7 +79,6 @@ export default function SectorPage() {
                 </div>
             </div>
 
-            {/* Tabelle */}
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
                     <thead>

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -20,6 +21,7 @@ public class Sector implements Serializable {
     enum SalaryClass {
         A, B, C, D
     }
+
 
     @Enumerated(EnumType.STRING)
     private Sector.SalaryClass salaryClass;
