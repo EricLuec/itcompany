@@ -9,6 +9,8 @@ const navItems = [
     { name: 'Sector', href: '/sector' },
     { name: 'Inventory', href: '/inventory' },
     { name: 'Buildings', href: '/building' },
+    { name: 'Invoices', href: '/invoice' },
+
 ]
 
 export default function Sidebar() {
