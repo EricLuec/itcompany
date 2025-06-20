@@ -23,10 +23,7 @@ public class Project {
     enum ProjectStatus {
         PLANNED, ACTIVE, COMPLETED
     }
-    /*
-    @ManyToOne
-    private Customer customer;
-*/
+
     @ManyToMany
     private List<Employee> employees;
 
