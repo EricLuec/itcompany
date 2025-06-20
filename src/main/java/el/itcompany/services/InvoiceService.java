@@ -4,20 +4,17 @@ import el.itcompany.entities.CompanyBudget;
 import el.itcompany.entities.Invoice;
 import el.itcompany.repositories.CompanyBudgetRepository;
 import el.itcompany.repositories.InvoiceRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final CompanyBudgetRepository budgetRepository;
-
-    public InvoiceService(InvoiceRepository invoiceRepository, CompanyBudgetRepository budgetRepository) {
-        this.invoiceRepository = invoiceRepository;
-        this.budgetRepository = budgetRepository;
-    }
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -64,4 +61,5 @@ public class InvoiceService {
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
     }
+
 }

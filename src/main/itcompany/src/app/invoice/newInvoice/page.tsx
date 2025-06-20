@@ -17,7 +17,7 @@ export default function CreateInvoiceForm() {
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     useEffect(() => {
-        fetch('http://localhost:8080/companyBudgets')
+        fetch('http://localhost:8080/companyBudget')
             .then(res => res.json())
             .then(setBudgets)
             .catch(err => console.error('Failed to load budgets', err));
@@ -39,14 +39,24 @@ export default function CreateInvoiceForm() {
             tax: tax || 0,
             discount: discount || 0,
             status,
+            budgetId
         };
 
         try {
-            const res = await fetch(`http://localhost:8080/api/invoices/budget/${budgetId}`, {
+            const res = await fetch(`http://localhost:8080/invoices/budget/${budgetId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({
+                    client,
+                    issueDate,
+                    dueDate,
+                    totalAmount: totalAmount || 0,
+                    tax: tax || 0,
+                    discount: discount || 0,
+                    status
+                }),
             });
+
 
             if (res.ok) {
                 setFormStatus('success');

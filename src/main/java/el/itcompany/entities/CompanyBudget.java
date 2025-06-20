@@ -16,14 +16,13 @@ public class CompanyBudget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
     private Double totalFunds;
     private Double reservedFunds;
     private Double availableFunds;
 
-    @OneToMany(mappedBy = "companyBudget", cascade = CascadeType.ALL)
+    @OneToMany
     private List<Invoice> invoices = new ArrayList<>();
-
-
 }

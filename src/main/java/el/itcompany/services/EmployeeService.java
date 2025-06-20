@@ -1,7 +1,6 @@
 package el.itcompany.services;
 
 import el.itcompany.entities.Employee;
-import el.itcompany.entities.Inventory;
 import el.itcompany.repositories.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

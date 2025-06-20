@@ -14,7 +14,6 @@ public class CompanyBudgetService {
 
     private final CompanyBudgetRepository budgetRepository;
 
-
     public List<CompanyBudget> getAllBudgets() {
         return budgetRepository.findAll();
     }
@@ -24,10 +23,17 @@ public class CompanyBudgetService {
     }
 
     public CompanyBudget createBudget(CompanyBudget budget) {
-        // Set availableFunds initially to totalFunds - reservedFunds
-        if (budget.getAvailableFunds() == null) {
-            budget.setAvailableFunds(budget.getTotalFunds() - budget.getReservedFunds());
+        Double total = budget.getTotalFunds() != null ? budget.getTotalFunds() : 0.0;
+        Double reserved = budget.getReservedFunds() != null ? budget.getReservedFunds() : 0.0;
+        Double available = budget.getAvailableFunds();
+
+        if (available == null) {
+            budget.setAvailableFunds(total - reserved);
         }
+
+        budget.setTotalFunds(total);
+        budget.setReservedFunds(reserved);
+
         return budgetRepository.save(budget);
     }
 
