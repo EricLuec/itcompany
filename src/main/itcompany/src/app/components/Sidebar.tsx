@@ -8,6 +8,7 @@ const navItems = [
     { name: 'Employees', href: '/employees' },
     { name: 'Sector', href: '/sector' },
     { name: 'Inventory', href: '/inventory' },
+    { name: 'Items', href: '/items' },
     { name: 'Buildings', href: '/buildings' },
     { name: 'Invoices', href: '/invoice' },
     { name: 'Projects', href: '/project' },
