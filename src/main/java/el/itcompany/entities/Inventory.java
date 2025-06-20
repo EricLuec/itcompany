@@ -20,10 +20,10 @@ public class Inventory {
     private String description;
     private LocalDate createdDate;
 
-    @Transient
+    @ManyToOne
     private Building building;
 
-    @Transient
+    @ManyToOne
     private Employee responsibleEmployee;
 
     @ManyToMany

@@ -16,7 +16,8 @@ type Employee = {
 export default function CreateInventoryForm() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [createdDate, setCreatedDate] = useState('');
+    const today = new Date().toISOString().split('T')[0];
+    const [createdDate, setCreatedDate] = useState(today);
     const [buildingId, setBuildingId] = useState<number | ''>('');
     const [employeeId, setEmployeeId] = useState<number | ''>('');
     const [generalValue, setGeneralValue] = useState<number | ''>('');
@@ -40,13 +41,18 @@ export default function CreateInventoryForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const selectedBuilding = buildings.find(b => b.id === buildingId) || null;
+        const selectedEmployee = employees.find(e => e.id === employeeId) || null;
+
+        setCreatedDate(today);
+
         const payload = {
             name,
             description,
             createdDate,
             generalValue: generalValue || 0,
-            building: buildingId ? {id: buildingId} : null,
-            responsibleEmployee: employeeId ? {id: employeeId} : null,
+            building: selectedBuilding,
+            responsibleEmployee: selectedEmployee,
             items: [],
         };
 
