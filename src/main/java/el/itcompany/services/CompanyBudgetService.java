@@ -12,37 +12,37 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyBudgetService {
 
-    private final CompanyBudgetRepository companyBudgetRepository;
+    private final CompanyBudgetRepository budgetRepository;
 
-    public List<CompanyBudget> getAllCompanyBudgets() {
-        return companyBudgetRepository.findAll();
+
+    public List<CompanyBudget> getAllBudgets() {
+        return budgetRepository.findAll();
     }
 
-    public Optional<CompanyBudget> getCompanyBudgetById(Long id) {
-        return companyBudgetRepository.findById(id);
+    public Optional<CompanyBudget> getBudgetById(Long id) {
+        return budgetRepository.findById(id);
     }
 
-    public CompanyBudget createCompanyBudget(CompanyBudget companyBudget) {
-        return companyBudgetRepository.save(companyBudget);
+    public CompanyBudget createBudget(CompanyBudget budget) {
+        // Set availableFunds initially to totalFunds - reservedFunds
+        if (budget.getAvailableFunds() == null) {
+            budget.setAvailableFunds(budget.getTotalFunds() - budget.getReservedFunds());
+        }
+        return budgetRepository.save(budget);
     }
 
-    public CompanyBudget updateCompanyBudget(Long id, CompanyBudget companyBudget) {
-        return companyBudgetRepository.findById(id)
-                .map(newCompanyBudget -> {
-                    newCompanyBudget.setName(companyBudget.getName());
-                    //project.setStartDate(projectDetails.getStartDate());
-                    //project.setEndDate(projectDetails.getEndDate());
-                    //project.setBudget(projectDetails.getBudget());
-                    // project.setStatus(projectDetails.getStatus());
-                    // project.setCustomer(projectDetails.getCustomer());
-                    // project.setEmployees(projectDetails.getEmployees());
-                    return companyBudgetRepository.save(companyBudget);
-                })
-                .orElseThrow(() -> new RuntimeException("Company Budget not found"));
+    public CompanyBudget updateBudget(Long id, CompanyBudget updated) {
+        return budgetRepository.findById(id).map(existing -> {
+            existing.setName(updated.getName());
+            existing.setDescription(updated.getDescription());
+            existing.setTotalFunds(updated.getTotalFunds());
+            existing.setReservedFunds(updated.getReservedFunds());
+            existing.setAvailableFunds(updated.getAvailableFunds());
+            return budgetRepository.save(existing);
+        }).orElseThrow(() -> new RuntimeException("Budget not found"));
     }
 
-    public void deleteCompanyBudget(Long id) {
-        companyBudgetRepository.deleteById(id);
+    public void deleteBudget(Long id) {
+        budgetRepository.deleteById(id);
     }
-
 }

@@ -1,9 +1,12 @@
 package el.itcompany.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,4 +22,7 @@ public class Item {
     private int price;
     private LocalDate purchaseDate;
 
+    @ManyToOne
+    @JsonIgnoreProperties("items")
+    private Inventory inventory;
 }

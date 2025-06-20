@@ -35,4 +35,7 @@ public class Invoice {
     public enum InvoiceStatus {
         DRAFT, SENT, PAID, OVERDUE
     }
+
+    @ManyToOne
+    private CompanyBudget companyBudget;
 }

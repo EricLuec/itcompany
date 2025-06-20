@@ -8,6 +8,11 @@ type Inventory = {
     name: string;
 };
 
+type SelectOption = {
+    label: string;
+    value: number;
+};
+
 export default function CreateItemForm() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -20,6 +25,11 @@ export default function CreateItemForm() {
     const [inventories, setInventories] = useState<Inventory[]>([]);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+    const inventoryOptions: SelectOption[] = inventories.map((inv) => ({
+        value: inv.id,
+        label: inv.name,
+    }));
+
     useEffect(() => {
         fetch('http://localhost:8080/inventory')
             .then((res) => res.json())
@@ -30,43 +40,47 @@ export default function CreateItemForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const inventoryId = selectedInventories[0]?.value;
-
         const payload = {
             name,
             description,
             price: price || 0,
             purchaseDate,
-            inventory: inventoryId ? {id: inventoryId} : null,
         };
 
         try {
             const res = await fetch('http://localhost:8080/items', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
 
-            if (res.ok) {
-                setFormStatus('success');
-                setName('');
-                setDescription('');
-                setPrice('');
-                setPurchaseDate(new Date().toISOString().split('T')[0]);
-                setSelectedInventories([]);
-            } else {
-                setFormStatus('error');
-            }
+            if (!res.ok) throw new Error('Item creation failed');
+
+            const createdItem = await res.json();
+
+            // Jetzt: Item den Inventories zuweisen
+            await Promise.all(
+                selectedInventories.map(inv =>
+                    fetch(`http://localhost:8080/inventory/${inv.value}/items`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(createdItem),
+                    })
+                )
+            );
+
+            setFormStatus('success');
+            setName('');
+            setDescription('');
+            setPrice('');
+            setPurchaseDate(new Date().toISOString().split('T')[0]);
+            setSelectedInventories([]);
         } catch (err) {
             console.error(err);
             setFormStatus('error');
         }
     };
 
-    const inventoryOptions = inventories.map((inv) => ({
-        value: inv.id,
-        label: inv.name,
-    }));
 
     return (
         <div className="max-w-2xl mx-auto p-6">

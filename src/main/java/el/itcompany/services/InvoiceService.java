@@ -1,17 +1,23 @@
 package el.itcompany.services;
 
+import el.itcompany.entities.CompanyBudget;
 import el.itcompany.entities.Invoice;
+import el.itcompany.repositories.CompanyBudgetRepository;
 import el.itcompany.repositories.InvoiceRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final CompanyBudgetRepository budgetRepository;
+
+    public InvoiceService(InvoiceRepository invoiceRepository, CompanyBudgetRepository budgetRepository) {
+        this.invoiceRepository = invoiceRepository;
+        this.budgetRepository = budgetRepository;
+    }
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -22,34 +28,40 @@ public class InvoiceService {
                 .orElseThrow(() -> new RuntimeException("Invoice not found"));
     }
 
-    public Invoice createInvoice(Invoice invoice) {
+    public List<Invoice> getInvoicesByBudget(Long budgetId) {
+        return invoiceRepository.findByCompanyBudgetId(budgetId);
+    }
+
+    public Invoice createInvoice(Invoice invoice, Long budgetId) {
+        CompanyBudget budget = budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new RuntimeException("Budget not found"));
+
+        if (invoice.getTotalAmount() > budget.getAvailableFunds()) {
+            throw new RuntimeException("Not enough available funds in the selected budget");
+        }
+
+        budget.setAvailableFunds(budget.getAvailableFunds() - invoice.getTotalAmount());
+        budgetRepository.save(budget);
+
+        invoice.setCompanyBudget(budget);
         return invoiceRepository.save(invoice);
     }
 
-    public Invoice updateInvoice(Long id, Invoice updatedInvoice) {
-        Invoice invoice = getInvoiceById(id);
-        invoice.setClient(updatedInvoice.getClient());
-        invoice.setProject(updatedInvoice.getProject());
-        invoice.setIssueDate(updatedInvoice.getIssueDate());
-        invoice.setDueDate(updatedInvoice.getDueDate());
-        invoice.setAmount(updatedInvoice.getAmount());
-        invoice.setTax(updatedInvoice.getTax());
-        invoice.setDiscount(updatedInvoice.getDiscount());
-        invoice.setTotalAmount(updatedInvoice.getTotalAmount());
-        invoice.setStatus(updatedInvoice.getStatus());
-        return invoiceRepository.save(invoice);
+    public Invoice updateInvoice(Long id, Invoice updated) {
+        return invoiceRepository.findById(id).map(existing -> {
+            existing.setClient(updated.getClient());
+            existing.setIssueDate(updated.getIssueDate());
+            existing.setDueDate(updated.getDueDate());
+            existing.setAmount(updated.getAmount());
+            existing.setTax(updated.getTax());
+            existing.setDiscount(updated.getDiscount());
+            existing.setTotalAmount(updated.getTotalAmount());
+            existing.setStatus(updated.getStatus());
+            return invoiceRepository.save(existing);
+        }).orElseThrow(() -> new RuntimeException("Invoice not found"));
     }
 
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
-    }
-
-    public Invoice payInvoice(Long id) {
-        Invoice invoice = getInvoiceById(id);
-        if (invoice.getStatus() == Invoice.InvoiceStatus.PAID) {
-            throw new RuntimeException("Invoice already paid");
-        }
-        invoice.setStatus(Invoice.InvoiceStatus.PAID);
-        return invoiceRepository.save(invoice);
     }
 }

@@ -1,22 +1,23 @@
-'use client'
-import {useEffect, useState} from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 
-type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
+export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
 
-type Project = {
+export type CompanyBudget = {
     id: number;
     name: string;
 };
 
-type Invoice = {
+export type Invoice = {
     id: number;
     client: string;
-    project: Project | null;
+    companyBudget: CompanyBudget | null;
     issueDate: string;
     dueDate: string;
     totalAmount: number;
     status: InvoiceStatus;
 };
+
 
 export default function InvoicePage() {
     const [data, setData] = useState<Invoice[]>([]);
@@ -67,7 +68,7 @@ export default function InvoicePage() {
                 <div className="flex flex-wrap gap-4">
                     <input
                         type="text"
-                        placeholder="Search for clienthcc..."
+                        placeholder="Search for client..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={clientFilter}
                         onChange={(e) => setClientFilter(e.target.value)}
@@ -93,7 +94,7 @@ export default function InvoicePage() {
                     <tr className="bg-blue-500 text-white text-left">
                         <th className="px-6 py-3">ID</th>
                         <th className="px-6 py-3">Client</th>
-                        <th className="px-6 py-3">Project</th>
+                        <th className="px-6 py-3">Budget</th>
                         <th className="px-6 py-3">Issue Date</th>
                         <th className="px-6 py-3">Due Date</th>
                         <th className="px-6 py-3">Total Amount</th>
@@ -105,17 +106,20 @@ export default function InvoicePage() {
                         <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
                             <td className="px-6 py-4">{inv.id}</td>
                             <td className="px-6 py-4">{inv.client}</td>
-                            <td className="px-6 py-4">{inv.project?.name || '-'}</td>
+                            <td className="px-6 py-4">{inv.companyBudget?.name || '-'}</td>
                             <td className="px-6 py-4">{new Date(inv.issueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{new Date(inv.dueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{inv.totalAmount} CHF</td>
                             <td className="px-6 py-4">
-                                <span className={`px-2 py-1 rounded-full text-sm font-medium ${inv.status === 'PAID'
-                                    ? 'bg-green-100 text-green-800'
-                                    : inv.status === 'OVERDUE'
-                                        ? 'bg-red-100 text-red-800'
-                                        : 'bg-yellow-100 text-yellow-800'}`}>{inv.status}
-                                </span>
+                  <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                      inv.status === 'PAID'
+                          ? 'bg-green-100 text-green-800'
+                          : inv.status === 'OVERDUE'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    {inv.status}
+                  </span>
                             </td>
                         </tr>
                     ))}

@@ -2,7 +2,6 @@ package el.itcompany.controllers;
 
 import el.itcompany.entities.CompanyBudget;
 import el.itcompany.services.CompanyBudgetService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,41 +10,35 @@ import java.util.List;
 @RequestMapping("/companyBudgets")
 public class CompanyBudgetController {
 
-    private final CompanyBudgetService companyBudgetService;
+    private final CompanyBudgetService budgetService;
 
-    public CompanyBudgetController(CompanyBudgetService companyBudgetService) {
-        this.companyBudgetService = companyBudgetService;
+    public CompanyBudgetController(CompanyBudgetService budgetService) {
+        this.budgetService = budgetService;
     }
 
     @GetMapping
-    public List<CompanyBudget> getAllCompaniesBudgets() {
-        return companyBudgetService.getAllCompanyBudgets();
+    public List<CompanyBudget> getAllBudgets() {
+        return budgetService.getAllBudgets();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyBudget> getCompanyBudgetById(@PathVariable Long id) {
-        return companyBudgetService.getCompanyBudgetById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public CompanyBudget getBudgetById(@PathVariable Long id) {
+        return budgetService.getBudgetById(id)
+                .orElseThrow(() -> new RuntimeException("Budget not found"));
     }
 
     @PostMapping
-    public CompanyBudget createCompanyBudget(@RequestBody CompanyBudget companyBudget) {
-        return companyBudgetService.createCompanyBudget(companyBudget);
+    public CompanyBudget createBudget(@RequestBody CompanyBudget budget) {
+        return budgetService.createBudget(budget);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyBudget> updateCompanyBudget(@PathVariable Long id, @RequestBody CompanyBudget comapnyBudget) {
-        try {
-            return ResponseEntity.ok(companyBudgetService.updateCompanyBudget(id, comapnyBudget));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public CompanyBudget updateBudget(@PathVariable Long id, @RequestBody CompanyBudget budget) {
+        return budgetService.updateBudget(id, budget);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
-        companyBudgetService.deleteCompanyBudget(id);
-        return ResponseEntity.noContent().build();
+    public void deleteBudget(@PathVariable Long id) {
+        budgetService.deleteBudget(id);
     }
 }

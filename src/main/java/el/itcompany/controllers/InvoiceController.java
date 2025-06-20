@@ -2,11 +2,9 @@ package el.itcompany.controllers;
 
 import el.itcompany.entities.Invoice;
 import el.itcompany.services.InvoiceService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/invoices")
@@ -28,10 +26,14 @@ public class InvoiceController {
         return invoiceService.getInvoiceById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Invoice createInvoice(@RequestBody Invoice invoice) {
-        return invoiceService.createInvoice(invoice);
+    @GetMapping("/budget/{budgetId}")
+    public List<Invoice> getInvoicesByBudget(@PathVariable Long budgetId) {
+        return invoiceService.getInvoicesByBudget(budgetId);
+    }
+
+    @PostMapping("/budget/{budgetId}")
+    public Invoice createInvoice(@RequestBody Invoice invoice, @PathVariable Long budgetId) {
+        return invoiceService.createInvoice(invoice, budgetId);
     }
 
     @PutMapping("/{id}")
@@ -40,13 +42,7 @@ public class InvoiceController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInvoice(@PathVariable Long id) {
         invoiceService.deleteInvoice(id);
-    }
-
-    @PostMapping("/{id}/pay")
-    public Invoice payInvoice(@PathVariable Long id) {
-        return invoiceService.payInvoice(id);
     }
 }

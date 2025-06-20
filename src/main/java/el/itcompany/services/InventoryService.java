@@ -4,6 +4,7 @@ import el.itcompany.entities.Employee;
 import el.itcompany.entities.Inventory;
 import el.itcompany.entities.Item;
 import el.itcompany.repositories.InventoryRepository;
+import el.itcompany.repositories.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
+    private final ItemRepository itemRepository;
 
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
@@ -50,7 +52,10 @@ public class InventoryService {
     public Inventory addItemToInventory(Long inventoryId, Item item) {
         Inventory inventory = inventoryRepository.findById(inventoryId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        item.setInventory(inventory);
         inventory.getItems().add(item);
+
         return inventoryRepository.save(inventory);
     }
 
