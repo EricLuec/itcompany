@@ -10,7 +10,7 @@ type Employee = {
     salary: number;
     hireDate: string;
     manager: string;
-    items: any[]; // Oder type Item[] falls du den Typ definieren willst
+    items: any[];
 };
 
 export default function EmployeePage() {
@@ -66,7 +66,7 @@ export default function EmployeePage() {
                 <div className="flex flex-wrap gap-4">
                     <input
                         type="text"
-                        placeholder="Name suchen..."
+                        placeholder="Search name..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={nameFilter}
                         onChange={(e) => setNameFilter(e.target.value)}
@@ -74,7 +74,7 @@ export default function EmployeePage() {
 
                     <input
                         type="text"
-                        placeholder="Manager suchen..."
+                        placeholder="Search manager..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={managerFilter}
                         onChange={(e) => setManagerFilter(e.target.value)}
@@ -89,8 +89,8 @@ export default function EmployeePage() {
                         <th className="px-6 py-3">ID</th>
                         <th className="px-6 py-3">Name</th>
                         <th className="px-6 py-3">E-Mail</th>
-                        <th className="px-6 py-3">Gehalt</th>
-                        <th className="px-6 py-3">Einstellungsdatum</th>
+                        <th className="px-6 py-3">Salary</th>
+                        <th className="px-6 py-3">Hire-Date</th>
                         <th className="px-6 py-3">Manager</th>
                         <th className="px-6 py-3">Items</th>
                     </tr>
@@ -112,7 +112,7 @@ export default function EmployeePage() {
                     {filtered.length === 0 && (
                         <tr>
                             <td colSpan={7} className="text-center py-6 text-gray-500">
-                                Keine Mitarbeiter gefunden.
+                                No employees found.
                             </td>
                         </tr>
                     )}

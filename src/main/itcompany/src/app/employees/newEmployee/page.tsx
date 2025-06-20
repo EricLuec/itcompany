@@ -29,7 +29,7 @@ export default function CreateEmployeeForm() {
         fetch('http://localhost:8080/employees')
             .then(res => res.json())
             .then(data => setEmployees(data))
-            .catch(err => console.error('Fehler beim Laden der Mitarbeiter:', err));
+            .catch(err => console.error('Error while fetching Employees:', err));
     }, []);
 
     const managerOptions: ManagerOption[] = employees.map(e => ({
@@ -80,7 +80,7 @@ export default function CreateEmployeeForm() {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                     type="text"
-                    placeholder="Vorname"
+                    placeholder="FirstName"
                     value={firstName}
                     onChange={e => setFirstName(e.target.value)}
                     required

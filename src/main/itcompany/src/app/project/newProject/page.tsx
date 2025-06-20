@@ -148,9 +148,9 @@ export default function CreateProjectForm() {
                     onChange={(e) => setStatus(e.target.value as ProjectStatus)}
                     className="w-full border rounded-full px-4 py-2"
                 >
-                    <option value="PLANNED">PLANNED</option>
-                    <option value="ACTIVE">ACTIVE</option>
-                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="PLANNED">Planned</option>
+                    <option value="ACTIVE">Active</option>
+                    <option value="COMPLETED">Completed</option>
                 </select>
 
                 <button

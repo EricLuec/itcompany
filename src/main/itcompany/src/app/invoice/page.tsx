@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
 
@@ -67,7 +67,7 @@ export default function InvoicePage() {
                 <div className="flex flex-wrap gap-4">
                     <input
                         type="text"
-                        placeholder="Client suchen..."
+                        placeholder="Search for clienthcc..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={clientFilter}
                         onChange={(e) => setClientFilter(e.target.value)}
@@ -78,11 +78,11 @@ export default function InvoicePage() {
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as InvoiceStatus | '')}
                     >
-                        <option value="">Alle Status</option>
-                        <option value="DRAFT">DRAFT</option>
-                        <option value="SENT">SENT</option>
-                        <option value="PAID">PAID</option>
-                        <option value="OVERDUE">OVERDUE</option>
+                        <option value="">Status</option>
+                        <option value="DRAFT">Draft</option>
+                        <option value="SENT">Sent</option>
+                        <option value="PAID">Paid</option>
+                        <option value="OVERDUE">Overdue</option>
                     </select>
                 </div>
             </div>
@@ -110,25 +110,19 @@ export default function InvoicePage() {
                             <td className="px-6 py-4">{new Date(inv.dueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{inv.totalAmount} CHF</td>
                             <td className="px-6 py-4">
-                  <span
-                      className={`px-2 py-1 rounded-full text-sm font-medium ${
-                          inv.status === 'PAID'
-                              ? 'bg-green-100 text-green-800'
-                              : inv.status === 'OVERDUE'
-                                  ? 'bg-red-100 text-red-800'
-                                  : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                  >
-                    {inv.status}
-                  </span>
+                                <span className={`px-2 py-1 rounded-full text-sm font-medium ${inv.status === 'PAID'
+                                    ? 'bg-green-100 text-green-800'
+                                    : inv.status === 'OVERDUE'
+                                        ? 'bg-red-100 text-red-800'
+                                        : 'bg-yellow-100 text-yellow-800'}`}>{inv.status}
+                                </span>
                             </td>
                         </tr>
                     ))}
-
                     {filtered.length === 0 && (
                         <tr>
                             <td colSpan={7} className="text-center py-6 text-gray-500">
-                                Keine Ergebnisse gefunden.
+                                No results found.
                             </td>
                         </tr>
                     )}
