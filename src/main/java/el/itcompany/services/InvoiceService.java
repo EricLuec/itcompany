@@ -12,7 +12,6 @@ import java.util.List;
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
-    private final CompanyBudgetService companyBudgetService;
 
     public List<Invoice> getAllInvoices() {
         return invoiceRepository.findAll();
@@ -50,8 +49,6 @@ public class InvoiceService {
         if (invoice.getStatus() == Invoice.InvoiceStatus.PAID) {
             throw new RuntimeException("Invoice already paid");
         }
-        // Budget prüfen und abziehen
-        companyBudgetService.debitFunds(invoice.getTotalAmount());
         invoice.setStatus(Invoice.InvoiceStatus.PAID);
         return invoiceRepository.save(invoice);
     }
