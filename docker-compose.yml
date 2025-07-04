@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: db
+    env_file: .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile.spring
+    container_name: springboot-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DB_PASS}
+    depends_on:
+      - postgres
+
+  nextjs:
+    image: oven/bun:latest
+    container_name: nextjs-app
+    working_dir: /app
+    volumes:
+      - ./src/main/itcompany:/app
+    command: bun dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

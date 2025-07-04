@@ -1,0 +1,20 @@
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+
+# Kopiere pom.xml
+COPY ./pom.xml /app/
+
+# Kopiere kompletten Quellcode
+COPY ./src /app/src
+
+# Baue das Projekt (achtet auf den richtigen Pfad zu Java-Code)
+RUN mvn -f /app/pom.xml clean package -DskipTests
+
+# ---------- Runtime ----------
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
