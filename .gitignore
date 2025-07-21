@@ -43,3 +43,5 @@ build/
 /src/main/itcompany/.next
 node_modules
 .env
+./.env
+/.env
