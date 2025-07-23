@@ -47,3 +47,4 @@ node_modules
 ./src/main/resources/application.properties
 /src/main/resources/application.properties
 .idea
+*.idea
