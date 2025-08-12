@@ -55,6 +55,26 @@ export default function EmployeePage() {
         setFiltered(result);
     }, [nameFilter, managerFilter, employees]);
 
+    async function deleteEmployee(id: number) {
+        if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/employees/${id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+            });
+
+            if (!res.ok) {
+                throw new Error(`Fehler beim Löschen: ${res.status}`);
+            }
+
+            setEmployees(prev => prev.filter(e => e.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    }
+
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Employees…</div>;
     }
@@ -93,6 +113,7 @@ export default function EmployeePage() {
                         <th className="px-6 py-3">Hire-Date</th>
                         <th className="px-6 py-3">Manager</th>
                         <th className="px-6 py-3">Items</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,11 +128,19 @@ export default function EmployeePage() {
                             </td>
                             <td className="px-6 py-4">{emp.manager || '—'}</td>
                             <td className="px-6 py-4">{emp.items?.length || 0}</td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => deleteEmployee(emp.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={7} className="text-center py-6 text-gray-500">
+                            <td colSpan={8} className="text-center py-6 text-gray-500">
                                 No employees found.
                             </td>
                         </tr>

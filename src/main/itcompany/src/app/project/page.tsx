@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 type ProjectStatus = 'PLANNED' | 'ACTIVE' | 'COMPLETED';
 
@@ -21,7 +21,6 @@ export default function ProjectPage() {
     const [data, setData] = useState<Project[]>([]);
     const [filtered, setFiltered] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
-
     const [nameFilter, setNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>(''); // '' = Alle
 
@@ -54,6 +53,25 @@ export default function ProjectPage() {
 
         setFiltered(result);
     }, [nameFilter, statusFilter, data]);
+
+    async function deleteProject(id: number) {
+        if (!confirm('Projekt wirklich löschen?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/projects/${id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+            });
+
+            if (!res.ok) {
+                throw new Error('Löschen fehlgeschlagen');
+            }
+            setData((prev) => prev.filter((p) => p.id !== id));
+        } catch (error) {
+            console.error(error);
+            alert('Fehler beim Löschen des Projekts.');
+        }
+    }
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
@@ -94,6 +112,7 @@ export default function ProjectPage() {
                         <th className="px-6 py-3">Manager</th>
                         <th className="px-6 py-3">Budget</th>
                         <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -104,24 +123,32 @@ export default function ProjectPage() {
                             <td className="px-6 py-4">{project.manager}</td>
                             <td className="px-6 py-4">{project.budget} €</td>
                             <td className="px-6 py-4">
-                                    <span
-                                        className={`px-2 py-1 rounded-full text-sm font-medium ${
-                                            project.status === 'PLANNED'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : project.status === 'ACTIVE'
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-gray-300 text-gray-800'
-                                        }`}
-                                    >
-                                        {project.status}
-                                    </span>
+                                <span
+                                    className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                        project.status === 'PLANNED'
+                                            ? 'bg-yellow-100 text-yellow-800'
+                                            : project.status === 'ACTIVE'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-gray-300 text-gray-800'
+                                    }`}
+                                >
+                                    {project.status}
+                                </span>
+                            </td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => deleteProject(project.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
                             </td>
                         </tr>
                     ))}
 
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={5} className="text-center py-6 text-gray-500">
+                            <td colSpan={6} className="text-center py-6 text-gray-500">
                                 Keine Projekte gefunden.
                             </td>
                         </tr>

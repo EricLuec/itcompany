@@ -64,20 +64,6 @@ export default function CreateInventoryForm() {
             });
 
             if (res.ok) {
-                // ✅ LogEntry Payload vorbereiten
-                const logPayload = {
-                    action: 'CREATE_INVENTORY',
-                    timestamp: new Date().toISOString(),
-                    details: `Inventory "${name}" created by employee ID ${employeeId}`,
-                };
-
-                // POST an /logEntry
-                await fetch('http://localhost:8080/logEntry', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(logPayload),
-                });
-
                 setFormStatus('success');
                 setName('');
                 setDescription('');

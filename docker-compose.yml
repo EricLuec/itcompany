@@ -4,14 +4,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.spring
-    volumes:
-      - ./src/main/java:/app/src/main/java
     ports:
       - "8080:8080"
     depends_on:
       - db
     env_file:
       - .env
+    volumes:
+      - ./src/main/java:/app/src/main/java
+      - ./src/main/resources:/app/src/main/resources
+      - ./pom.xml:/app/pom.xml
 
   frontend:
     build:
@@ -22,7 +24,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./src/main/itcompany:/app    # Frontend Quellcode mounten
+      - ./src/main/itcompany:/app
 
     environment:
       - CHOKIDAR_USEPOLLING=true

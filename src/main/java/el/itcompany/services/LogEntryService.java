@@ -1,6 +1,5 @@
 package el.itcompany.services;
 
-import el.itcompany.entities.Item;
 import el.itcompany.entities.LogEntry;
 import el.itcompany.repositories.LogEntryRepository;
 import lombok.RequiredArgsConstructor;

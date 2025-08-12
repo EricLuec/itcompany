@@ -1,18 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react';
 
-type Building = {
-    name: string;
-};
-
-type Employee = {
-    firstName: string;
-    lastName: string;
-};
-
-type Item = {
-    name: string;
-};
+type Building = { name: string };
+type Employee = { firstName: string; lastName: string };
+type Item = { name: string };
 
 type Inventory = {
     id: number;
@@ -29,7 +20,6 @@ export default function InventoryPage() {
     const [data, setData] = useState<Inventory[]>([]);
     const [filtered, setFiltered] = useState<Inventory[]>([]);
     const [loading, setLoading] = useState(true);
-
     const [nameFilter, setNameFilter] = useState('');
     const [employeeFilter, setEmployeeFilter] = useState('');
 
@@ -67,12 +57,34 @@ export default function InventoryPage() {
         setFiltered(result);
     }, [nameFilter, employeeFilter, data]);
 
+    async function deleteInventory(id: number) {
+        if (!confirm('Inventar wirklich löschen?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/inventory/${id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+            });
+
+            if (!res.ok) {
+                throw new Error(`Fehler beim Löschen: ${res.status}`);
+            }
+
+            // Nach erfolgreichem Löschen State aktualisieren
+            setData((prev) => prev.filter((inv) => inv.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    }
+
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Inventory...</div>;
     }
 
     return (
         <div className="p-6 space-y-6">
+            {/* Filter-Bereich */}
             <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <div className="flex flex-wrap gap-4">
@@ -93,6 +105,7 @@ export default function InventoryPage() {
                 </div>
             </div>
 
+            {/* Tabelle */}
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
                     <thead>
@@ -105,6 +118,7 @@ export default function InventoryPage() {
                         <th className="px-6 py-3">Responsible</th>
                         <th className="px-6 py-3">Items</th>
                         <th className="px-6 py-3">Value</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -113,7 +127,9 @@ export default function InventoryPage() {
                             <td className="px-6 py-4">{inv.id}</td>
                             <td className="px-6 py-4">{inv.name}</td>
                             <td className="px-6 py-4">{inv.description}</td>
-                            <td className="px-6 py-4">{new Date(inv.createdDate).toLocaleDateString()}</td>
+                            <td className="px-6 py-4">
+                                {new Date(inv.createdDate).toLocaleDateString()}
+                            </td>
                             <td className="px-6 py-4">{inv.building?.name || '-'}</td>
                             <td className="px-6 py-4">
                                 {inv.responsibleEmployee
@@ -124,11 +140,19 @@ export default function InventoryPage() {
                                 {inv.items.map((item) => item.name).join(', ') || '-'}
                             </td>
                             <td className="px-6 py-4">{inv.generalValue}</td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => deleteInventory(inv.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={8} className="text-center py-6 text-gray-500">
+                            <td colSpan={9} className="text-center py-6 text-gray-500">
                                 No results found.
                             </td>
                         </tr>

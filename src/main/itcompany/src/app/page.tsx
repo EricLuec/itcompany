@@ -12,7 +12,6 @@ type LogEntry = {
 export default function HomePage() {
   const [entries, setEntries] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch('http://localhost:8080/logEntry')
@@ -21,12 +20,11 @@ export default function HomePage() {
           return res.json();
         })
         .then((data) => {
-          setEntries(data.slice(0, 3)); // max. 3 entries
+          setEntries(data);
           setLoading(false);
         })
         .catch((err) => {
           console.error(err);
-          setError(true);
           setLoading(false);
         });
   }, []);
@@ -39,35 +37,31 @@ export default function HomePage() {
     );
   }
 
-  if (error) {
-    return (
-        <div className="text-center text-red-600 py-6">
-          Error loading log entries.
-        </div>
-    );
-  }
-
   return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
-        {entries.map((entry) => (
-            <div
-                key={entry.id}
-                className={`rounded-xl shadow-md p-4 border-l-4 ${
-                    entry.level === 'ERROR'
-                        ? 'border-red-500 bg-red-50'
-                        : entry.level === 'WARN'
-                            ? 'border-yellow-500 bg-yellow-50'
-                            : 'border-blue-500 bg-blue-50'
-                }`}>
-              <div className="text-sm text-gray-500">
-                {new Date(entry.timestamp).toLocaleString()}
-              </div>
-              <div className="mt-2 text-gray-800 font-medium">{entry.message}</div>
-              <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-600">
-                {entry.level}
-              </div>
-            </div>
-        ))}
+          {entries.map((entry) => {
+              console.log('Timestamp raw:', entry.timestamp);
+              const date = new Date(entry.timestamp);
+              console.log('Date object:', date);
+
+              const dateStr = !isNaN(date.getTime()) ? date.toLocaleString() : 'Invalid Date';
+
+              return (
+                  <div key={entry.id} className={`rounded-xl shadow-md p-4 border-l-4 ${
+                      entry.level === 'ERROR'
+                          ? 'border-red-500 bg-red-50'
+                          : entry.level === 'WARN'
+                              ? 'border-yellow-500 bg-yellow-50'
+                              : 'border-blue-500 bg-blue-50'
+                  }`}
+                  >
+                      <div className="text-sm text-gray-500">{dateStr}</div>
+                      <div className="mt-2 text-gray-800 font-medium">{entry.message}</div>
+                      <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-600">{entry.level}</div>
+                  </div>
+              );
+          })}
+
       </div>
   );
 }

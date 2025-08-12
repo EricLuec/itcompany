@@ -18,7 +18,6 @@ export type Invoice = {
     status: InvoiceStatus;
 };
 
-
 export default function InvoicePage() {
     const [data, setData] = useState<Invoice[]>([]);
     const [filtered, setFiltered] = useState<Invoice[]>([]);
@@ -56,6 +55,26 @@ export default function InvoicePage() {
 
         setFiltered(result);
     }, [clientFilter, statusFilter, data]);
+
+    async function deleteInvoice(id: number) {
+        if (!confirm('Diese Rechnung wirklich löschen?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/invoices/${id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+            });
+
+            if (!res.ok) {
+                throw new Error(`Fehler beim Löschen: ${res.status}`);
+            }
+
+            setData((prev) => prev.filter((inv) => inv.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    }
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
@@ -99,6 +118,7 @@ export default function InvoicePage() {
                         <th className="px-6 py-3">Due Date</th>
                         <th className="px-6 py-3">Total Amount</th>
                         <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -111,21 +131,31 @@ export default function InvoicePage() {
                             <td className="px-6 py-4">{new Date(inv.dueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{inv.totalAmount} CHF</td>
                             <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full text-sm font-medium ${
-                      inv.status === 'PAID'
-                          ? 'bg-green-100 text-green-800'
-                          : inv.status === 'OVERDUE'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {inv.status}
-                  </span>
+                                    <span
+                                        className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                            inv.status === 'PAID'
+                                                ? 'bg-green-100 text-green-800'
+                                                : inv.status === 'OVERDUE'
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-yellow-100 text-yellow-800'
+                                        }`}
+                                    >
+                                        {inv.status}
+                                    </span>
+                            </td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => deleteInvoice(inv.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
                             </td>
                         </tr>
                     ))}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={7} className="text-center py-6 text-gray-500">
+                            <td colSpan={8} className="text-center py-6 text-gray-500">
                                 No results found.
                             </td>
                         </tr>

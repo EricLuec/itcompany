@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Getter
@@ -18,4 +20,5 @@ public class LogEntry {
     private Long id;
     private String category;
     private String description;
+    private LocalDateTime timestamp;
 }

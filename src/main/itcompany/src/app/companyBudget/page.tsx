@@ -39,6 +39,26 @@ export default function CompanyBudgetPage() {
         setFiltered(result);
     }, [nameFilter, budgets]);
 
+    async function deleteBudget(id: number) {
+        if (!confirm('Diesen Budget-Eintrag wirklich löschen?')) return;
+
+        try {
+            const res = await fetch(`http://localhost:8080/companyBudget/${id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+            });
+
+            if (!res.ok) {
+                throw new Error(`Fehler beim Löschen: ${res.status}`);
+            }
+
+            setBudgets(prev => prev.filter(b => b.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    }
+
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Budgets…</div>;
     }
@@ -66,6 +86,7 @@ export default function CompanyBudgetPage() {
                         <th className="px-6 py-3">Total</th>
                         <th className="px-6 py-3">Reserved</th>
                         <th className="px-6 py-3">Available</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,11 +98,19 @@ export default function CompanyBudgetPage() {
                             <td className="px-6 py-4">{b.totalFunds.toFixed(2)} CHF</td>
                             <td className="px-6 py-4">{b.reservedFunds.toFixed(2)} CHF</td>
                             <td className="px-6 py-4">{b.availableFunds.toFixed(2)} CHF</td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => deleteBudget(b.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={6} className="text-center py-6 text-gray-500">
+                            <td colSpan={7} className="text-center py-6 text-gray-500">
                                 No budgets found.
                             </td>
                         </tr>
