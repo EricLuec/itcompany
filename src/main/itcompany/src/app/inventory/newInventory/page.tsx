@@ -42,7 +42,7 @@ export default function CreateInventoryForm() {
         e.preventDefault();
 
         const selectedBuilding = buildings.find(b => b.id === buildingId) || null;
-        const selectedEmployee = employees.find(e => e.id === employeeId) || null;
+        const selectedEmployee = employees.find(emp => emp.id === employeeId) || null;
 
         setCreatedDate(today);
 
@@ -59,11 +59,25 @@ export default function CreateInventoryForm() {
         try {
             const res = await fetch('http://localhost:8080/inventory', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
 
             if (res.ok) {
+                // ✅ LogEntry Payload vorbereiten
+                const logPayload = {
+                    action: 'CREATE_INVENTORY',
+                    timestamp: new Date().toISOString(),
+                    details: `Inventory "${name}" created by employee ID ${employeeId}`,
+                };
+
+                // POST an /logEntry
+                await fetch('http://localhost:8080/logEntry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(logPayload),
+                });
+
                 setFormStatus('success');
                 setName('');
                 setDescription('');
