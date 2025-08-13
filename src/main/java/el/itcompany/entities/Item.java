@@ -25,4 +25,8 @@ public class Item {
     @ManyToOne
     @JsonIgnoreProperties("items")
     private Inventory inventory;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

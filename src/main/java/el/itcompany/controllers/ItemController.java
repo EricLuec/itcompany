@@ -1,6 +1,8 @@
 package el.itcompany.controllers;
 
+import el.itcompany.entities.Employee;
 import el.itcompany.entities.Item;
+import el.itcompany.services.EmployeeService;
 import el.itcompany.services.ItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, EmployeeService employeeService) {
         this.itemService = itemService;
     }
 
@@ -37,7 +39,9 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item item) {
         try {
-            return ResponseEntity.ok(itemService.updateItem(id, item));
+            item.setId(id); // ID muss gesetzt werden, sonst wird ein neues Item erzeugt
+            Item updatedItem = itemService.updateItem(item); // speichert jetzt auch den Employee
+            return ResponseEntity.ok(updatedItem);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -48,4 +52,6 @@ public class ItemController {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

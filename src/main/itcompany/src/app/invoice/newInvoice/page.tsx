@@ -17,10 +17,10 @@ export default function CreateInvoiceForm() {
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     useEffect(() => {
-        fetch('http://localhost:8080/companyBudget')
+        fetch('http://localhost:8080/invoice')
             .then(res => res.json())
             .then(setBudgets)
-            .catch(err => console.error('Failed to load budgets', err));
+            .catch(err => console.error('Failed to load invoices', err));
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
