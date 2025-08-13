@@ -29,20 +29,41 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+
     public Item updateItem(Item updatedItem) {
-        Long id = updatedItem.getId();
-        return itemRepository.findById(id)
+        return itemRepository.findById(updatedItem.getId())
                 .map(item -> {
+                    // Update fields
                     item.setName(updatedItem.getName());
                     item.setDescription(updatedItem.getDescription());
                     item.setCategory(updatedItem.getCategory());
                     item.setPrice(updatedItem.getPrice());
                     item.setPurchaseDate(updatedItem.getPurchaseDate());
                     item.setInventory(updatedItem.getInventory());
-                    item.setEmployee(updatedItem.getEmployee());
-                    return itemRepository.save(item);
+
+                    // Handle employee
+                    if (updatedItem.getEmployee() != null && updatedItem.getEmployee().getId() != null) {
+                        Employee emp = employeeRepository.findById(updatedItem.getEmployee().getId())
+                                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                        item.setEmployee(emp);
+                    } else {
+                        item.setEmployee(null);
+                    }
+
+                    Item savedItem = itemRepository.save(item);
+
+                    // Force load the employee to avoid lazy loading issues
+                    if (savedItem.getEmployee() != null) {
+                        savedItem.getEmployee().getFirstName(); // Touch the employee to load it
+                    }
+
+                    System.out.println("Returning item: " + savedItem);
+                    System.out.println("Employee: " + savedItem.getEmployee());
+
+                    return savedItem;
                 }).orElseThrow(() -> new RuntimeException("Item not found"));
     }
+
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }

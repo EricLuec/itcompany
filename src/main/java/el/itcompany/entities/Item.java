@@ -22,11 +22,10 @@ public class Item {
     private int price;
     private LocalDate purchaseDate;
 
-    @ManyToOne
-    @JsonIgnoreProperties("items")
-    private Inventory inventory;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // Ensure employee is loaded
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    @ManyToOne
+    private Inventory inventory;
 }

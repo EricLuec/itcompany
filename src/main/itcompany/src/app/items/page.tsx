@@ -71,8 +71,10 @@ export default function ItemsPage() {
         if (!editItem) return;
 
         try {
-            const selectedEmployee = employees.find((e) => e.id === newEmployeeId) || null;
-            const updatedItem = { ...editItem, employee: selectedEmployee };
+            const updatedItem = {
+                ...editItem,
+                employee: newEmployeeId ? { id: newEmployeeId } : null
+            };
 
             const res = await fetch(`http://localhost:8080/items/${editItem.id}`, {
                 method: 'PUT',
@@ -82,12 +84,18 @@ export default function ItemsPage() {
 
             if (!res.ok) throw new Error(`Fehler beim Update: ${res.status}`);
 
+            // Get the updated item from the response
+            const responseItem = await res.json();
+
+            // Update lokal die Items-Liste
             setItems((prev) =>
                 prev.map((item) =>
-                    item.id === editItem.id ? updatedItem : item
+                    item.id === editItem.id ? responseItem : item
                 )
             );
 
+            setEditItem(null);
+            setEditItem(null);
             setEditItem(null);
             setNewEmployeeId('');
         } catch (err) {
@@ -166,10 +174,13 @@ export default function ItemsPage() {
                         </h3>
                         <select
                             value={newEmployeeId}
-                            onChange={(e) => setNewEmployeeId(Number(e.target.value))}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setNewEmployeeId(val === '' ? '' : Number(val));
+                            }}
                             className="w-full border rounded-xl px-4 py-2"
                         >
-                            <option value="">-- Select Employee --</option>
+                            <option value="">-- Kein Employee --</option>
                             {employees.map((emp) => (
                                 <option key={emp.id} value={emp.id}>
                                     {emp.firstName} {emp.lastName}

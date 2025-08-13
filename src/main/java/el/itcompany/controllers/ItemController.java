@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/items")
@@ -39,10 +40,18 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item item) {
         try {
-            item.setId(id); // ID muss gesetzt werden, sonst wird ein neues Item erzeugt
-            Item updatedItem = itemService.updateItem(item); // speichert jetzt auch den Employee
+            item.setId(id);
+            Item updatedItem = itemService.updateItem(item);
+
+            // Log the response before sending
+            System.out.println("Sending response: " + updatedItem);
+            if (updatedItem.getEmployee() != null) {
+                System.out.println("Employee in response: " + updatedItem.getEmployee().getFirstName());
+            }
+
             return ResponseEntity.ok(updatedItem);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }
@@ -53,5 +62,22 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}/simple")
+    public ResponseEntity<String> getSimpleItem(@PathVariable Long id) {
+        Optional<Item> itemOpt = itemService.getItemById(id);
+        if (itemOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Item item = itemOpt.get();
+        String result = String.format(
+                "ID: %d, Name: %s, Employee: %s",
+                item.getId(),
+                item.getName(),
+                item.getEmployee() != null ? item.getEmployee().getFirstName() : "null"
+        );
+
+        return ResponseEntity.ok(result);
+    }
 
 }

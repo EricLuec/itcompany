@@ -1,5 +1,6 @@
 package el.itcompany.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,6 +30,5 @@ public class Employee {
     private List<String> complaints;
     private LocalDate hireDate;
     private List<String> warnings;
-
 
 }
