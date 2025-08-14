@@ -29,6 +29,7 @@ export default function InventoryPage() {
     const [loading, setLoading] = useState(true);
     const [nameFilter, setNameFilter] = useState('');
     const [employeeFilter, setEmployeeFilter] = useState('');
+    const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
     useEffect(() => {
         fetch('http://localhost:8080/inventory')
@@ -84,6 +85,12 @@ export default function InventoryPage() {
         }
     }
 
+    function toggleRow(id: number) {
+        setExpandedRows((prev) =>
+            prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+        );
+    }
+
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Inventory...</div>;
     }
@@ -130,6 +137,7 @@ export default function InventoryPage() {
                     <tbody>
                     {filtered.map((inv) => {
                         const totalValue = inv.items.reduce((sum, item) => sum + item.price, 0);
+                        const isExpanded = expandedRows.includes(inv.id);
 
                         return (
                             <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
@@ -146,9 +154,41 @@ export default function InventoryPage() {
                                         : '-'}
                                 </td>
                                 <td className="px-6 py-4">
-                                    {inv.items.length > 0
-                                        ? inv.items.map((item) => `${item.name} (€${item.price})`).join(', ')
-                                        : '-'}
+                                    {inv.items.length > 0 ? (
+                                        <div className="space-y-2">
+                                            <div>
+                                                {inv.items.slice(0, 2).map((item) => (
+                                                    <span
+                                                        key={item.id}
+                                                        className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2"
+                                                    >
+                                                        {item.name} (€{item.price})
+                                                    </span>
+                                                ))}
+                                                {inv.items.length > 2 && (
+                                                    <button
+                                                        onClick={() => toggleRow(inv.id)}
+                                                        className="text-blue-600 text-xs underline ml-2"
+                                                    >
+                                                        {isExpanded
+                                                            ? 'Weniger anzeigen'
+                                                            : `+${inv.items.length - 2} mehr`}
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {isExpanded && (
+                                                <div className="bg-gray-50 border rounded p-2 space-y-1">
+                                                    {inv.items.map((item) => (
+                                                        <div key={item.id} className="text-sm text-gray-700">
+                                                            • {item.name} – {item.description || 'Keine Beschreibung'} (€{item.price})
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        '-'
+                                    )}
                                 </td>
                                 <td className="px-6 py-4 font-semibold">{totalValue}</td>
                                 <td className="px-6 py-4">
