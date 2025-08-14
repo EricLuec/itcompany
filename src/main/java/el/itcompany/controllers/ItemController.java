@@ -43,7 +43,6 @@ public class ItemController {
             item.setId(id);
             Item updatedItem = itemService.updateItem(item);
 
-            // Log the response before sending
             System.out.println("Sending response: " + updatedItem);
             if (updatedItem.getEmployee() != null) {
                 System.out.println("Employee in response: " + updatedItem.getEmployee().getFirstName());

@@ -12,12 +12,10 @@ export default function EmployeePage() {
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Wenn Employees geladen sind
     useEffect(() => {
         if (employees.length > 0) setLoading(false);
     }, [employees]);
 
-    // Filtere die Mitarbeiter
     useEffect(() => {
         let result = employees;
 
@@ -36,7 +34,6 @@ export default function EmployeePage() {
         setFiltered(result);
     }, [nameFilter, managerFilter, employees]);
 
-    // Mitarbeiter löschen
     async function deleteEmployee(id: number) {
         if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
 
@@ -52,13 +49,11 @@ export default function EmployeePage() {
         }
     }
 
-    // Mitarbeiter bearbeiten (Öffnet das Formular)
     function handleEdit(employee: Employee) {
         setEditEmployee(employee);
         setIsEditing(true);
     }
 
-    // Mitarbeiter aktualisieren
     async function handleUpdate(employee: Employee) {
         try {
             const res = await fetch(`http://localhost:8080/employees/${employee.id}`, {
@@ -81,7 +76,6 @@ export default function EmployeePage() {
         }
     }
 
-    // Wenn die Seite noch lädt
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Employees…</div>;
     }
@@ -159,7 +153,6 @@ export default function EmployeePage() {
                 </table>
             </div>
 
-            {/* Bearbeitungsformular */}
             {isEditing && editEmployee && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-xl max-w-lg w-full">
@@ -205,13 +198,20 @@ export default function EmployeePage() {
                                     onChange={(e) => setEditEmployee({ ...editEmployee, hireDate: e.target.value })}
                                     className="w-full border px-4 py-2 rounded"
                                 />
-                                <input
-                                    type="text"
+                                <select
                                     value={editEmployee.manager || ''}
                                     onChange={(e) => setEditEmployee({ ...editEmployee, manager: e.target.value })}
                                     className="w-full border px-4 py-2 rounded"
-                                    placeholder="Manager"
-                                />
+                                >
+                                    <option value="">Select Manager</option>
+                                    {employees
+                                        .filter(emp => emp.id !== editEmployee.id)
+                                        .map(emp => (
+                                            <option key={emp.id} value={emp.firstName + ' ' + emp.lastName}>
+                                                {emp.firstName} {emp.lastName}
+                                            </option>
+                                        ))}
+                                </select>
                                 <div className="flex justify-end gap-4">
                                     <button
                                         type="button"

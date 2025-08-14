@@ -54,7 +54,6 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Funktion zum Bearbeiten eines Mitarbeiters
     const editEmployee = async (id: number, updatedEmployee: Employee) => {
         try {
             const res = await fetch(`http://localhost:8080/employees/${id}`, {
@@ -67,7 +66,6 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
 
             if (!res.ok) throw new Error(`Fehler beim Bearbeiten: ${res.status}`);
 
-            // Mitarbeiter im State aktualisieren
             setEmployees((prev) =>
                 prev.map((e) => (e.id === id ? { ...e, ...updatedEmployee } : e))
             );
@@ -92,7 +90,6 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// Hook für Komponenten
 export const useEmployeeContext = () => {
     const context = useContext(EmployeeContext);
     if (!context) {
@@ -101,5 +98,4 @@ export const useEmployeeContext = () => {
     return context;
 };
 
-// Optional: Hook mit allen Methoden für die EmployeePage
 export const useEmployees = () => useEmployeeContext();

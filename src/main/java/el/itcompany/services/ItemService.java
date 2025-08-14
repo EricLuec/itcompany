@@ -33,7 +33,6 @@ public class ItemService {
     public Item updateItem(Item updatedItem) {
         return itemRepository.findById(updatedItem.getId())
                 .map(item -> {
-                    // Update fields
                     item.setName(updatedItem.getName());
                     item.setDescription(updatedItem.getDescription());
                     item.setCategory(updatedItem.getCategory());
@@ -41,7 +40,6 @@ public class ItemService {
                     item.setPurchaseDate(updatedItem.getPurchaseDate());
                     item.setInventory(updatedItem.getInventory());
 
-                    // Handle employee
                     if (updatedItem.getEmployee() != null && updatedItem.getEmployee().getId() != null) {
                         Employee emp = employeeRepository.findById(updatedItem.getEmployee().getId())
                                 .orElseThrow(() -> new RuntimeException("Employee not found"));
@@ -52,9 +50,8 @@ public class ItemService {
 
                     Item savedItem = itemRepository.save(item);
 
-                    // Force load the employee to avoid lazy loading issues
                     if (savedItem.getEmployee() != null) {
-                        savedItem.getEmployee().getFirstName(); // Touch the employee to load it
+                        savedItem.getEmployee().getFirstName();
                     }
 
                     System.out.println("Returning item: " + savedItem);
