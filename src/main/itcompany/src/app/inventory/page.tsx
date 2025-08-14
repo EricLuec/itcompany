@@ -3,7 +3,15 @@ import { useEffect, useState } from 'react';
 
 type Building = { name: string };
 type Employee = { firstName: string; lastName: string };
-type Item = { name: string };
+type Item = {
+    id: number;
+    name: string;
+    description: string;
+    category: string | null;
+    price: number;
+    purchaseDate: string;
+    employee: Employee | null;
+};
 
 type Inventory = {
     id: number;
@@ -13,7 +21,6 @@ type Inventory = {
     building: Building | null;
     responsibleEmployee: Employee | null;
     items: Item[];
-    generalValue: number;
 };
 
 export default function InventoryPage() {
@@ -70,7 +77,6 @@ export default function InventoryPage() {
                 throw new Error(`Fehler beim Löschen: ${res.status}`);
             }
 
-            // Nach erfolgreichem Löschen State aktualisieren
             setData((prev) => prev.filter((inv) => inv.id !== id));
         } catch (err) {
             console.error(err);
@@ -117,39 +123,45 @@ export default function InventoryPage() {
                         <th className="px-6 py-3">Building</th>
                         <th className="px-6 py-3">Responsible</th>
                         <th className="px-6 py-3">Items</th>
-                        <th className="px-6 py-3">Value</th>
+                        <th className="px-6 py-3">Value (€)</th>
                         <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.map((inv) => (
-                        <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
-                            <td className="px-6 py-4">{inv.id}</td>
-                            <td className="px-6 py-4">{inv.name}</td>
-                            <td className="px-6 py-4">{inv.description}</td>
-                            <td className="px-6 py-4">
-                                {new Date(inv.createdDate).toLocaleDateString()}
-                            </td>
-                            <td className="px-6 py-4">{inv.building?.name || '-'}</td>
-                            <td className="px-6 py-4">
-                                {inv.responsibleEmployee
-                                    ? `${inv.responsibleEmployee.firstName} ${inv.responsibleEmployee.lastName}`
-                                    : '-'}
-                            </td>
-                            <td className="px-6 py-4">
-                                {inv.items.map((item) => item.name).join(', ') || '-'}
-                            </td>
-                            <td className="px-6 py-4">{inv.generalValue}</td>
-                            <td className="px-6 py-4">
-                                <button
-                                    onClick={() => deleteInventory(inv.id)}
-                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
-                                >
-                                    Löschen
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {filtered.map((inv) => {
+                        const totalValue = inv.items.reduce((sum, item) => sum + item.price, 0);
+
+                        return (
+                            <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
+                                <td className="px-6 py-4">{inv.id}</td>
+                                <td className="px-6 py-4">{inv.name}</td>
+                                <td className="px-6 py-4">{inv.description}</td>
+                                <td className="px-6 py-4">
+                                    {new Date(inv.createdDate).toLocaleDateString()}
+                                </td>
+                                <td className="px-6 py-4">{inv.building?.name || '-'}</td>
+                                <td className="px-6 py-4">
+                                    {inv.responsibleEmployee
+                                        ? `${inv.responsibleEmployee.firstName} ${inv.responsibleEmployee.lastName}`
+                                        : '-'}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {inv.items.length > 0
+                                        ? inv.items.map((item) => `${item.name} (€${item.price})`).join(', ')
+                                        : '-'}
+                                </td>
+                                <td className="px-6 py-4 font-semibold">{totalValue}</td>
+                                <td className="px-6 py-4">
+                                    <button
+                                        onClick={() => deleteInventory(inv.id)}
+                                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                    >
+                                        Löschen
+                                    </button>
+                                </td>
+                            </tr>
+                        );
+                    })}
                     {filtered.length === 0 && (
                         <tr>
                             <td colSpan={9} className="text-center py-6 text-gray-500">
