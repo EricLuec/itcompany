@@ -18,6 +18,8 @@ interface EmployeeContextType {
     setEmployees: React.Dispatch<React.SetStateAction<Employee[]>>;
     addEmployee: (employee: Employee) => void;
     refreshEmployees: () => Promise<void>;
+    deleteEmployee: (id: number) => Promise<void>;
+    editEmployee: (id: number, updatedEmployee: Employee) => Promise<void>;
 }
 
 const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined);
@@ -37,16 +39,54 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    // Funktion zum Löschen eines Mitarbeiters
+    const deleteEmployee = async (id: number) => {
+        try {
+            const res = await fetch(`http://localhost:8080/employees/${id}`, { method: 'DELETE' });
+
+            if (!res.ok) throw new Error(`Fehler beim Löschen: ${res.status}`);
+
+            // Mitarbeiter aus dem State entfernen
+            setEmployees((prev) => prev.filter((e) => e.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    };
+
+    // Funktion zum Bearbeiten eines Mitarbeiters
+    const editEmployee = async (id: number, updatedEmployee: Employee) => {
+        try {
+            const res = await fetch(`http://localhost:8080/employees/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedEmployee),
+            });
+
+            if (!res.ok) throw new Error(`Fehler beim Bearbeiten: ${res.status}`);
+
+            // Mitarbeiter im State aktualisieren
+            setEmployees((prev) =>
+                prev.map((e) => (e.id === id ? { ...e, ...updatedEmployee } : e))
+            );
+        } catch (err) {
+            console.error(err);
+            alert('Bearbeiten fehlgeschlagen.');
+        }
+    };
+
+    const addEmployee = (employee: Employee) => {
+        setEmployees((prev) => [...prev, employee]);
+    };
+
     useEffect(() => {
         refreshEmployees();
     }, []);
 
-    const addEmployee = (employee: Employee) => {
-        setEmployees(prev => [...prev, employee]);
-    };
-
     return (
-        <EmployeeContext.Provider value={{ employees, setEmployees, addEmployee, refreshEmployees }}>
+        <EmployeeContext.Provider value={{ employees, setEmployees, addEmployee, refreshEmployees, deleteEmployee, editEmployee }}>
             {children}
         </EmployeeContext.Provider>
     );

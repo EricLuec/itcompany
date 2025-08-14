@@ -1,12 +1,18 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useBuildings, Building } from '@/context/BuildingContext';
+import { useEffect, useState, useMemo } from 'react';
+import { useBuildings } from '@/context/BuildingContext';
 
 export default function BuildingPage() {
-    const { buildings, loading } = useBuildings();
+    const { buildings, loading, refreshBuildings } = useBuildings();
     const [cityFilter, setCityFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('');
+
+    useEffect(() => {
+        if (!buildings.length) {
+            refreshBuildings();
+        }
+    }, [buildings, refreshBuildings]);
 
     const filtered = useMemo(() => {
         return buildings.filter((b) =>

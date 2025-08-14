@@ -1,12 +1,15 @@
 'use client'
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
-export type Inventory = { id: number; name: string };
+export type Inventory = { id: number; name: string; description: string; items: {
+        description: string;
+        id: number; name: string; price: number }[]; responsibleEmployee?: { firstName: string; lastName: string }; building?: { name: string }; createdDate: string };
 
 type InventoryContextType = {
     inventories: Inventory[];
     loading: boolean;
     refreshInventories: () => Promise<void>;
+    deleteInventory: (id: number) => Promise<void>;
 };
 
 const InventoryContext = createContext<InventoryContextType | undefined>(undefined);
@@ -28,13 +31,30 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
+    const deleteInventory = async (id: number) => {
+        try {
+            // Löschen des Inventars vom Server
+            const res = await fetch(`http://localhost:8080/inventory/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to delete inventory');
+            }
+
+            // Lokalen Zustand nach dem Löschen aktualisieren
+            setInventories((prevInventories) => prevInventories.filter((inv) => inv.id !== id));
+        } catch (err) {
+            console.error('Error deleting inventory:', err);
+        }
+    };
+
     useEffect(() => {
         refreshInventories().catch(console.error);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [refreshInventories]);
 
     return (
-        <InventoryContext.Provider value={{ inventories, loading, refreshInventories }}>
+        <InventoryContext.Provider value={{ inventories, loading, refreshInventories, deleteInventory }}>
             {children}
         </InventoryContext.Provider>
     );

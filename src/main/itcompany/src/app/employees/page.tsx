@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useEmployees, Employee } from '@/context/EmployeeContext';
 
 export default function EmployeePage() {
@@ -8,11 +9,15 @@ export default function EmployeePage() {
     const [loading, setLoading] = useState(true);
     const [nameFilter, setNameFilter] = useState('');
     const [managerFilter, setManagerFilter] = useState('');
+    const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
 
+    // Wenn Employees geladen sind
     useEffect(() => {
         if (employees.length > 0) setLoading(false);
     }, [employees]);
 
+    // Filtere die Mitarbeiter
     useEffect(() => {
         let result = employees;
 
@@ -31,6 +36,7 @@ export default function EmployeePage() {
         setFiltered(result);
     }, [nameFilter, managerFilter, employees]);
 
+    // Mitarbeiter löschen
     async function deleteEmployee(id: number) {
         if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
 
@@ -46,6 +52,36 @@ export default function EmployeePage() {
         }
     }
 
+    // Mitarbeiter bearbeiten (Öffnet das Formular)
+    function handleEdit(employee: Employee) {
+        setEditEmployee(employee);
+        setIsEditing(true);
+    }
+
+    // Mitarbeiter aktualisieren
+    async function handleUpdate(employee: Employee) {
+        try {
+            const res = await fetch(`http://localhost:8080/employees/${employee.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(employee),
+            });
+
+            if (!res.ok) throw new Error(`Fehler beim Aktualisieren: ${res.status}`);
+
+            const updatedEmployee = await res.json();
+            setEmployees(prev => prev.map(emp => (emp.id === updatedEmployee.id ? updatedEmployee : emp)));
+            setIsEditing(false);
+            setEditEmployee(null);
+        } catch (err) {
+            console.error(err);
+            alert('Aktualisieren fehlgeschlagen.');
+        }
+    }
+
+    // Wenn die Seite noch lädt
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Employees…</div>;
     }
@@ -98,6 +134,12 @@ export default function EmployeePage() {
                             <td className="px-6 py-4">{emp.items?.length || 0}</td>
                             <td className="px-6 py-4">
                                 <button
+                                    onClick={() => handleEdit(emp)}
+                                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-full text-sm mr-2"
+                                >
+                                    Bearbeiten
+                                </button>
+                                <button
                                     onClick={() => deleteEmployee(emp.id)}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
@@ -116,6 +158,80 @@ export default function EmployeePage() {
                     </tbody>
                 </table>
             </div>
+
+            {/* Bearbeitungsformular */}
+            {isEditing && editEmployee && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-xl max-w-lg w-full">
+                        <h3 className="text-xl font-semibold mb-4">Edit Employee</h3>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (editEmployee) handleUpdate(editEmployee);
+                            }}
+                        >
+                            <div className="space-y-4">
+                                <input
+                                    type="text"
+                                    value={editEmployee.firstName}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, firstName: e.target.value })}
+                                    className="w-full border px-4 py-2 rounded"
+                                    placeholder="First Name"
+                                />
+                                <input
+                                    type="text"
+                                    value={editEmployee.lastName}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, lastName: e.target.value })}
+                                    className="w-full border px-4 py-2 rounded"
+                                    placeholder="Last Name"
+                                />
+                                <input
+                                    type="email"
+                                    value={editEmployee.email}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, email: e.target.value })}
+                                    className="w-full border px-4 py-2 rounded"
+                                    placeholder="Email"
+                                />
+                                <input
+                                    type="number"
+                                    value={editEmployee.salary}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, salary: parseFloat(e.target.value) })}
+                                    className="w-full border px-4 py-2 rounded"
+                                    placeholder="Salary"
+                                />
+                                <input
+                                    type="date"
+                                    value={editEmployee.hireDate ? new Date(editEmployee.hireDate).toISOString().split('T')[0] : ''}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, hireDate: e.target.value })}
+                                    className="w-full border px-4 py-2 rounded"
+                                />
+                                <input
+                                    type="text"
+                                    value={editEmployee.manager || ''}
+                                    onChange={(e) => setEditEmployee({ ...editEmployee, manager: e.target.value })}
+                                    className="w-full border px-4 py-2 rounded"
+                                    placeholder="Manager"
+                                />
+                                <div className="flex justify-end gap-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsEditing(false)}
+                                        className="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+                                    >
+                                        Abbrechen
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-white rounded"
+                                    >
+                                        Speichern
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

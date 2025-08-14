@@ -28,7 +28,6 @@ export default function CreateSectorForm() {
                 setDescription('');
                 setSalaryClass('A');
 
-                // Context aktualisieren
                 await refreshSectors();
             } else {
                 setStatus('error');

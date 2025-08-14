@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { BudgetProvider } from '@/context/CompanyBudgetContext'; // Pfad ggf. anpassen
+import { BudgetProvider } from '@/context/CompanyBudgetContext';
 
 export default function CompanyBudgetLayout({ children }: { children: ReactNode }) {
     return (

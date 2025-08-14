@@ -30,12 +30,12 @@ public class EmployeeService {
         return employeeRepository.findById(id)
                 .map(employee -> {
                     employee.setFirstName(employeeDetails.getFirstName());
-                    //project.setStartDate(projectDetails.getStartDate());
-                    //project.setEndDate(projectDetails.getEndDate());
-                    //project.setBudget(projectDetails.getBudget());
-                    // project.setStatus(projectDetails.getStatus());
-                    // project.setCustomer(projectDetails.getCustomer());
-                    // project.setEmployees(projectDetails.getEmployees());
+                    employee.setLastName(employeeDetails.getLastName());
+                    employee.setEmail(employeeDetails.getEmail());
+                    employee.setSalary(employeeDetails.getSalary());
+                    employee.setHireDate(employeeDetails.getHireDate());
+                    employee.setManager(employeeDetails.getManager());
+
                     return employeeRepository.save(employee);
                 })
                 .orElseThrow(() -> new RuntimeException("Employee not found"));

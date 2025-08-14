@@ -46,9 +46,8 @@ export default function CreateEmployeeForm() {
 
             if (res.ok) {
                 const newEmployee = await res.json();
-                addEmployee(newEmployee); // Context aktualisieren
+                addEmployee(newEmployee);
 
-                // Formular zurücksetzen
                 setFirstName('');
                 setLastName('');
                 setEmail('');

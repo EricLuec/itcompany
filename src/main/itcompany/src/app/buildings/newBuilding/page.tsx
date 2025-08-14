@@ -1,27 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
-import { useBuildings, Sector } from '@/context/BuildingContext';
-
+import { useSectors } from '@/context/SectorContext';
+import {useBuildings} from "@/context/BuildingContext";
 export default function CreateBuildingForm() {
-    const { refreshBuildings } = useBuildings();
+    const { sectors, refreshSectors } = useSectors();
+    const {refreshBuildings } = useBuildings();
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [city, setCity] = useState('');
     const [capacity, setCapacity] = useState(0);
     const [buildingDate, setBuildingDate] = useState('');
-    const [sectors, setSectors] = useState<Sector[]>([]);
     const [selectedSectors, setSelectedSectors] = useState<{ value: number; label: string }[]>([]);
     const [message, setMessage] = useState('');
-
-    useEffect(() => {
-        fetch('http://localhost:8080/sectors')
-            .then((res) => res.json())
-            .then((json: Sector[]) => setSectors(json))
-            .catch((err) => console.error('Failed to load sectors', err));
-    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -50,8 +43,6 @@ export default function CreateBuildingForm() {
                 setCapacity(0);
                 setBuildingDate('');
                 setSelectedSectors([]);
-
-                // Context aktualisieren
                 await refreshBuildings();
             } else {
                 setMessage('Failed to create building.');

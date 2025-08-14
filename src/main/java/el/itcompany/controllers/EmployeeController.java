@@ -36,12 +36,19 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
-        try {
-            return ResponseEntity.ok(employeeService.updateEmployee(id, employee));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+        return employeeService.getEmployeeById(id)
+                .map(employee -> {
+                    employee.setFirstName(employeeDetails.getFirstName());
+                    employee.setLastName(employeeDetails.getLastName());
+                    employee.setEmail(employeeDetails.getEmail());
+                    employee.setSalary(employeeDetails.getSalary());
+                    employee.setHireDate(employeeDetails.getHireDate());
+                    employee.setManager(employeeDetails.getManager());
+                    // Weitere Felder hier setzen, falls nötig
+                    return employeeService.updateEmployee(id, employee);
+                })
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
     }
 
     @DeleteMapping("/{id}")

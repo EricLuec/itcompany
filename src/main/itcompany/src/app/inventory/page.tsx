@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useInventories, Inventory } from '@/context/InventoryContext';
+import { useInventories } from '@/context/InventoryContext';
 
 export default function InventoryPage() {
     const { inventories, loading, deleteInventory } = useInventories();

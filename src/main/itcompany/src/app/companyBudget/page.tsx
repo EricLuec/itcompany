@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useBudgets, CompanyBudget } from '@/context/CompanyBudgetContext';
 
 export default function CompanyBudgetPage() {
-    const { budgets, loading, deleteBudget } = useBudgets(); // <-- deleteBudget hier
+    const { budgets, loading, deleteBudget } = useBudgets();
     const [filtered, setFiltered] = useState<CompanyBudget[]>([]);
     const [nameFilter, setNameFilter] = useState('');
 
@@ -57,7 +57,7 @@ export default function CompanyBudgetPage() {
                             <td className="px-6 py-4">{b.availableFunds.toFixed(2)} CHF</td>
                             <td className="px-6 py-4">
                                 <button
-                                    onClick={() => deleteBudget(b.id)} // <-- korrekt aus Hook
+                                    onClick={() => deleteBudget(b.id)}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Löschen
