@@ -49,14 +49,6 @@ public class ItemService {
                     }
 
                     Item savedItem = itemRepository.save(item);
-
-                    if (savedItem.getEmployee() != null) {
-                        savedItem.getEmployee().getFirstName();
-                    }
-
-                    System.out.println("Returning item: " + savedItem);
-                    System.out.println("Employee: " + savedItem.getEmployee());
-
                     return savedItem;
                 }).orElseThrow(() -> new RuntimeException("Item not found"));
     }

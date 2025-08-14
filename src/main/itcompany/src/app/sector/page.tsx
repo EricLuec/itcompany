@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSectors, Sector, SalaryClass } from '@/context/SectorContext';
+import { useSectors, Sector } from '@/context/SectorContext';
 
 export default function SectorPage() {
-    const { sectors } = useSectors();
+    const { sectors, deleteSector } = useSectors();
     const [filtered, setFiltered] = useState<Sector[]>([]);
     const [nameFilter, setNameFilter] = useState('');
     const [salaryFilter, setSalaryFilter] = useState<string>('');
@@ -24,6 +24,12 @@ export default function SectorPage() {
 
         setFiltered(result);
     }, [nameFilter, salaryFilter, sectors]);
+
+    const handleDelete = (id: number) => {
+        if (window.confirm('Möchten Sie diesen Sektor wirklich löschen?')) {
+            deleteSector(id);
+        }
+    };
 
     if (!sectors.length) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
@@ -64,6 +70,7 @@ export default function SectorPage() {
                         <th className="px-6 py-3">Name</th>
                         <th className="px-6 py-3">Beschreibung</th>
                         <th className="px-6 py-3">Gehaltsklasse</th>
+                        <th className="px-6 py-3">Aktionen</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -87,12 +94,20 @@ export default function SectorPage() {
                                     {sector.salaryClass}
                                 </span>
                             </td>
+                            <td className="px-6 py-4">
+                                <button
+                                    onClick={() => handleDelete(sector.id)}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                >
+                                    Löschen
+                                </button>
+                            </td>
                         </tr>
                     ))}
 
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={4} className="text-center py-6 text-gray-500">
+                            <td colSpan={5} className="text-center py-6 text-gray-500">
                                 Keine Ergebnisse gefunden.
                             </td>
                         </tr>

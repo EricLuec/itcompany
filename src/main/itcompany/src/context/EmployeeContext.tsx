@@ -39,7 +39,6 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Funktion zum Löschen eines Mitarbeiters
     const deleteEmployee = async (id: number) => {
         try {
             const res = await fetch(`http://localhost:8080/employees/${id}`, { method: 'DELETE' });

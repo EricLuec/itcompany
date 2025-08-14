@@ -42,7 +42,6 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
                 throw new Error('Failed to delete inventory');
             }
 
-            // Lokalen Zustand nach dem Löschen aktualisieren
             setInventories((prevInventories) => prevInventories.filter((inv) => inv.id !== id));
         } catch (err) {
             console.error('Error deleting inventory:', err);

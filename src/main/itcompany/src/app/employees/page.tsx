@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useEmployees, Employee } from '@/context/EmployeeContext';
 
 export default function EmployeePage() {
-    const { employees, setEmployees, refreshEmployees } = useEmployees();
+    const { employees, setEmployees, refreshEmployees, deleteEmployee } = useEmployees();
     const [filtered, setFiltered] = useState<Employee[]>([]);
     const [loading, setLoading] = useState(true);
     const [nameFilter, setNameFilter] = useState('');
@@ -34,19 +34,9 @@ export default function EmployeePage() {
         setFiltered(result);
     }, [nameFilter, managerFilter, employees]);
 
-    async function deleteEmployee(id: number) {
+    async function handleDelete(id: number) {
         if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
-
-        try {
-            const res = await fetch(`http://localhost:8080/employees/${id}`, { method: 'DELETE' });
-
-            if (!res.ok) throw new Error(`Fehler beim Löschen: ${res.status}`);
-
-            setEmployees(prev => prev.filter(e => e.id !== id));
-        } catch (err) {
-            console.error(err);
-            alert('Löschen fehlgeschlagen.');
-        }
+        await deleteEmployee(id);
     }
 
     function handleEdit(employee: Employee) {
@@ -134,7 +124,7 @@ export default function EmployeePage() {
                                     Bearbeiten
                                 </button>
                                 <button
-                                    onClick={() => deleteEmployee(emp.id)}
+                                    onClick={() => handleDelete(emp.id)}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Löschen

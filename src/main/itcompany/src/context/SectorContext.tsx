@@ -14,6 +14,7 @@ export type Sector = {
 type SectorContextType = {
     sectors: Sector[];
     refreshSectors: () => Promise<void>;
+    deleteSector: (id: number) => Promise<void>;
 };
 
 const SectorContext = createContext<SectorContextType | undefined>(undefined);
@@ -21,6 +22,7 @@ const SectorContext = createContext<SectorContextType | undefined>(undefined);
 export const SectorProvider = ({ children }: { children: ReactNode }) => {
     const [sectors, setSectors] = useState<Sector[]>([]);
 
+    // Fetch the sectors from the server
     const fetchSectors = async () => {
         try {
             const res = await fetch('http://localhost:8080/sectors');
@@ -31,12 +33,30 @@ export const SectorProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    // Delete a sector
+    const deleteSector = async (id: number) => {
+        try {
+            const res = await fetch(`http://localhost:8080/sectors/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to delete sector');
+            }
+
+            // Update local state after deletion
+            setSectors((prevSectors) => prevSectors.filter((sector) => sector.id !== id));
+        } catch (err) {
+            console.error('Error deleting sector:', err);
+        }
+    };
+
     useEffect(() => {
         fetchSectors();
     }, []);
 
     return (
-        <SectorContext.Provider value={{ sectors, refreshSectors: fetchSectors }}>
+        <SectorContext.Provider value={{ sectors, refreshSectors: fetchSectors, deleteSector }}>
             {children}
         </SectorContext.Provider>
     );
