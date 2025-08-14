@@ -1,13 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
-
-type Employee = {
-    id: number;
-    firstName: string;
-    lastName: string;
-};
+import { useEmployeeContext } from '@/context/EmployeeContext';
 
 type ManagerOption = {
     value: number;
@@ -15,6 +10,8 @@ type ManagerOption = {
 };
 
 export default function CreateEmployeeForm() {
+    const { employees, addEmployee } = useEmployeeContext();
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -22,15 +19,6 @@ export default function CreateEmployeeForm() {
     const [manager, setManager] = useState<ManagerOption | null>(null);
     const [hireDate, setHireDate] = useState('');
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-    const [employees, setEmployees] = useState<Employee[]>([]);
-
-    useEffect(() => {
-        fetch('http://localhost:8080/employees')
-            .then(res => res.json())
-            .then(data => setEmployees(data))
-            .catch(err => console.error('Error while fetching Employees:', err));
-    }, []);
 
     const managerOptions: ManagerOption[] = employees.map(e => ({
         value: e.id,
@@ -57,13 +45,17 @@ export default function CreateEmployeeForm() {
             });
 
             if (res.ok) {
-                setFormStatus('success');
+                const newEmployee = await res.json();
+                addEmployee(newEmployee); // Context aktualisieren
+
+                // Formular zurücksetzen
                 setFirstName('');
                 setLastName('');
                 setEmail('');
                 setSalary('');
                 setManager(null);
                 setHireDate('');
+                setFormStatus('success');
             } else {
                 setFormStatus('error');
             }

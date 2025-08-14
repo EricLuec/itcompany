@@ -1,13 +1,12 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
-
-type Sector = {
-    id: number;
-    name: string;
-};
+import { useBuildings, Sector } from '@/context/BuildingContext';
 
 export default function CreateBuildingForm() {
+    const { refreshBuildings } = useBuildings();
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [city, setCity] = useState('');
@@ -51,6 +50,9 @@ export default function CreateBuildingForm() {
                 setCapacity(0);
                 setBuildingDate('');
                 setSelectedSectors([]);
+
+                // Context aktualisieren
+                await refreshBuildings();
             } else {
                 setMessage('Failed to create building.');
             }

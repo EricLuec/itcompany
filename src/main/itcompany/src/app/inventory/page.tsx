@@ -1,103 +1,31 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
 
-type Building = { name: string };
-type Employee = { firstName: string; lastName: string };
-type Item = {
-    id: number;
-    name: string;
-    description: string;
-    category: string | null;
-    price: number;
-    purchaseDate: string;
-    employee: Employee | null;
-};
-
-type Inventory = {
-    id: number;
-    name: string;
-    description: string;
-    createdDate: string;
-    building: Building | null;
-    responsibleEmployee: Employee | null;
-    items: Item[];
-};
+import { useState } from 'react';
+import { useInventories, Inventory } from '@/context/InventoryContext';
 
 export default function InventoryPage() {
-    const [data, setData] = useState<Inventory[]>([]);
-    const [filtered, setFiltered] = useState<Inventory[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { inventories, loading, deleteInventory } = useInventories();
     const [nameFilter, setNameFilter] = useState('');
     const [employeeFilter, setEmployeeFilter] = useState('');
     const [expandedRows, setExpandedRows] = useState<number[]>([]);
-
-    useEffect(() => {
-        fetch('http://localhost:8080/inventory')
-            .then((res) => res.json())
-            .then((json) => {
-                setData(json);
-                setFiltered(json);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        let result = data;
-
-        if (nameFilter) {
-            result = result.filter((inv) =>
-                inv.name.toLowerCase().includes(nameFilter.toLowerCase())
-            );
-        }
-
-        if (employeeFilter) {
-            result = result.filter((inv) =>
-                `${inv.responsibleEmployee?.firstName ?? ''} ${inv.responsibleEmployee?.lastName ?? ''}`
-                    .toLowerCase()
-                    .includes(employeeFilter.toLowerCase())
-            );
-        }
-
-        setFiltered(result);
-    }, [nameFilter, employeeFilter, data]);
-
-    async function deleteInventory(id: number) {
-        if (!confirm('Inventar wirklich löschen?')) return;
-
-        try {
-            const res = await fetch(`http://localhost:8080/inventory/${id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-            });
-
-            if (!res.ok) {
-                throw new Error(`Fehler beim Löschen: ${res.status}`);
-            }
-
-            setData((prev) => prev.filter((inv) => inv.id !== id));
-        } catch (err) {
-            console.error(err);
-            alert('Löschen fehlgeschlagen.');
-        }
-    }
-
-    function toggleRow(id: number) {
-        setExpandedRows((prev) =>
-            prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-        );
-    }
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Inventory...</div>;
     }
 
+    const filtered = inventories.filter(inv =>
+        inv.name.toLowerCase().includes(nameFilter.toLowerCase()) &&
+        `${inv.responsibleEmployee?.firstName ?? ''} ${inv.responsibleEmployee?.lastName ?? ''}`
+            .toLowerCase()
+            .includes(employeeFilter.toLowerCase())
+    );
+
+    const toggleRow = (id: number) => {
+        setExpandedRows(prev => prev.includes(id) ? prev.filter(r => r !== id) : [...prev, id]);
+    };
+
     return (
         <div className="p-6 space-y-6">
-            {/* Filter-Bereich */}
             <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <div className="flex flex-wrap gap-4">
@@ -106,14 +34,14 @@ export default function InventoryPage() {
                         placeholder="Search by name..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={nameFilter}
-                        onChange={(e) => setNameFilter(e.target.value)}
+                        onChange={e => setNameFilter(e.target.value)}
                     />
                     <input
                         type="text"
                         placeholder="Search by employee..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={employeeFilter}
-                        onChange={(e) => setEmployeeFilter(e.target.value)}
+                        onChange={e => setEmployeeFilter(e.target.value)}
                     />
                 </div>
             </div>
@@ -131,11 +59,11 @@ export default function InventoryPage() {
                         <th className="px-6 py-3">Responsible</th>
                         <th className="px-6 py-3">Items</th>
                         <th className="px-6 py-3">Value (€)</th>
-                        <th className="px-6 py-3">Aktionen</th>
+                        <th className="px-6 py-3">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.map((inv) => {
+                    {filtered.map(inv => {
                         const totalValue = inv.items.reduce((sum, item) => sum + item.price, 0);
                         const isExpanded = expandedRows.includes(inv.id);
 
@@ -144,51 +72,38 @@ export default function InventoryPage() {
                                 <td className="px-6 py-4">{inv.id}</td>
                                 <td className="px-6 py-4">{inv.name}</td>
                                 <td className="px-6 py-4">{inv.description}</td>
-                                <td className="px-6 py-4">
-                                    {new Date(inv.createdDate).toLocaleDateString()}
-                                </td>
+                                <td className="px-6 py-4">{new Date(inv.createdDate).toLocaleDateString()}</td>
                                 <td className="px-6 py-4">{inv.building?.name || '-'}</td>
-                                <td className="px-6 py-4">
-                                    {inv.responsibleEmployee
-                                        ? `${inv.responsibleEmployee.firstName} ${inv.responsibleEmployee.lastName}`
-                                        : '-'}
-                                </td>
+                                <td className="px-6 py-4">{inv.responsibleEmployee ? `${inv.responsibleEmployee.firstName} ${inv.responsibleEmployee.lastName}` : '-'}</td>
                                 <td className="px-6 py-4">
                                     {inv.items.length > 0 ? (
                                         <div className="space-y-2">
                                             <div>
-                                                {inv.items.slice(0, 2).map((item) => (
-                                                    <span
-                                                        key={item.id}
-                                                        className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2"
-                                                    >
-                                                        {item.name} (€{item.price})
-                                                    </span>
+                                                {inv.items.slice(0, 2).map(item => (
+                                                    <span key={item.id} className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full mr-2">
+                                                            {item.name} (€{item.price})
+                                                        </span>
                                                 ))}
                                                 {inv.items.length > 2 && (
                                                     <button
                                                         onClick={() => toggleRow(inv.id)}
                                                         className="text-blue-600 text-xs underline ml-2"
                                                     >
-                                                        {isExpanded
-                                                            ? 'Weniger anzeigen'
-                                                            : `+${inv.items.length - 2} mehr`}
+                                                        {isExpanded ? 'Show less' : `+${inv.items.length - 2} more`}
                                                     </button>
                                                 )}
                                             </div>
                                             {isExpanded && (
                                                 <div className="bg-gray-50 border rounded p-2 space-y-1">
-                                                    {inv.items.map((item) => (
+                                                    {inv.items.map(item => (
                                                         <div key={item.id} className="text-sm text-gray-700">
-                                                            • {item.name} – {item.description || 'Keine Beschreibung'} (€{item.price})
+                                                            • {item.name} – {item.description || 'No description'} (€{item.price})
                                                         </div>
                                                     ))}
                                                 </div>
                                             )}
                                         </div>
-                                    ) : (
-                                        '-'
-                                    )}
+                                    ) : '-'}
                                 </td>
                                 <td className="px-6 py-4 font-semibold">{totalValue}</td>
                                 <td className="px-6 py-4">
@@ -196,7 +111,7 @@ export default function InventoryPage() {
                                         onClick={() => deleteInventory(inv.id)}
                                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                     >
-                                        Löschen
+                                        Delete
                                     </button>
                                 </td>
                             </tr>
@@ -204,9 +119,7 @@ export default function InventoryPage() {
                     })}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={9} className="text-center py-6 text-gray-500">
-                                No results found.
-                            </td>
+                            <td colSpan={9} className="text-center py-6 text-gray-500">No results found.</td>
                         </tr>
                     )}
                     </tbody>

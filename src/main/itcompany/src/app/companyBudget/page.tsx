@@ -1,34 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
-
-type CompanyBudget = {
-    id: number;
-    name: string;
-    description: string;
-    totalFunds: number;
-    reservedFunds: number;
-    availableFunds: number;
-};
+import { useState, useEffect } from 'react';
+import { useBudgets, CompanyBudget } from '@/context/CompanyBudgetContext';
 
 export default function CompanyBudgetPage() {
-    const [budgets, setBudgets] = useState<CompanyBudget[]>([]);
+    const { budgets, loading, deleteBudget } = useBudgets(); // <-- deleteBudget hier
     const [filtered, setFiltered] = useState<CompanyBudget[]>([]);
-    const [loading, setLoading] = useState(true);
     const [nameFilter, setNameFilter] = useState('');
-
-    useEffect(() => {
-        fetch('http://localhost:8080/companyBudget')
-            .then((res) => res.json())
-            .then((data) => {
-                setBudgets(data);
-                setFiltered(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Error fetching budgets:', err);
-                setLoading(false);
-            });
-    }, []);
 
     useEffect(() => {
         const result = nameFilter
@@ -38,26 +15,6 @@ export default function CompanyBudgetPage() {
             : budgets;
         setFiltered(result);
     }, [nameFilter, budgets]);
-
-    async function deleteBudget(id: number) {
-        if (!confirm('Diesen Budget-Eintrag wirklich löschen?')) return;
-
-        try {
-            const res = await fetch(`http://localhost:8080/companyBudget/${id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-            });
-
-            if (!res.ok) {
-                throw new Error(`Fehler beim Löschen: ${res.status}`);
-            }
-
-            setBudgets(prev => prev.filter(b => b.id !== id));
-        } catch (err) {
-            console.error(err);
-            alert('Löschen fehlgeschlagen.');
-        }
-    }
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Budgets…</div>;
@@ -100,7 +57,7 @@ export default function CompanyBudgetPage() {
                             <td className="px-6 py-4">{b.availableFunds.toFixed(2)} CHF</td>
                             <td className="px-6 py-4">
                                 <button
-                                    onClick={() => deleteBudget(b.id)}
+                                    onClick={() => deleteBudget(b.id)} // <-- korrekt aus Hook
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Löschen

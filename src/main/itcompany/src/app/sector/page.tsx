@@ -1,39 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-type SalaryClass = 'A' | 'B' | 'C' | 'D';
-type Sector = {
-    id: number;
-    name: string;
-    description: string;
-    salaryClass: SalaryClass;
-};
+import { useSectors, Sector, SalaryClass } from '@/context/SectorContext';
 
 export default function SectorPage() {
-    const [data, setData] = useState<Sector[]>([]);
+    const { sectors } = useSectors();
     const [filtered, setFiltered] = useState<Sector[]>([]);
-    const [loading, setLoading] = useState(true);
-
     const [nameFilter, setNameFilter] = useState('');
-    const [salaryFilter, setSalaryFilter] = useState<string>(''); // '' = Alle
+    const [salaryFilter, setSalaryFilter] = useState<string>('');
 
     useEffect(() => {
-        fetch('http://localhost:8080/sectors')
-            .then((res) => res.json())
-            .then((json) => {
-                setData(json);
-                setFiltered(json);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        let result = data;
+        let result = sectors;
 
         if (nameFilter) {
             result = result.filter((e) =>
@@ -46,9 +23,9 @@ export default function SectorPage() {
         }
 
         setFiltered(result);
-    }, [nameFilter, salaryFilter, data]);
+    }, [nameFilter, salaryFilter, sectors]);
 
-    if (loading) {
+    if (!sectors.length) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
     }
 
@@ -96,19 +73,19 @@ export default function SectorPage() {
                             <td className="px-6 py-4">{sector.name}</td>
                             <td className="px-6 py-4">{sector.description}</td>
                             <td className="px-6 py-4">
-                  <span
-                      className={`px-2 py-1 rounded-full text-sm font-medium ${
-                          sector.salaryClass === 'A'
-                              ? 'bg-green-100 text-green-800'
-                              : sector.salaryClass === 'B'
-                                  ? 'bg-yellow-100 text-yellow-800'
-                                  : sector.salaryClass === 'C'
-                                      ? 'bg-orange-100 text-orange-800'
-                                      : 'bg-red-100 text-red-800'
-                      }`}
-                  >
-                    {sector.salaryClass}
-                  </span>
+                                <span
+                                    className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                        sector.salaryClass === 'A'
+                                            ? 'bg-green-100 text-green-800'
+                                            : sector.salaryClass === 'B'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : sector.salaryClass === 'C'
+                                                    ? 'bg-orange-100 text-orange-800'
+                                                    : 'bg-red-100 text-red-800'
+                                    }`}
+                                >
+                                    {sector.salaryClass}
+                                </span>
                             </td>
                         </tr>
                     ))}

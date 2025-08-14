@@ -1,81 +1,30 @@
 'use client';
-
-import {useEffect, useState} from 'react';
-
-type ProjectStatus = 'PLANNED' | 'ACTIVE' | 'COMPLETED';
-
-type Project = {
-    id: number;
-    name: string;
-    description: string;
-    manager: string;
-    creationDate: string;
-    startDate: string;
-    endDate: string;
-    budget: number;
-    status: ProjectStatus;
-    workerList: string[];
-};
+import { useState } from 'react';
+import {useProjects} from '@/context/ProjectContext';
 
 export default function ProjectPage() {
-    const [data, setData] = useState<Project[]>([]);
-    const [filtered, setFiltered] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { projects, loading, refreshProjects } = useProjects();
     const [nameFilter, setNameFilter] = useState('');
-    const [statusFilter, setStatusFilter] = useState<string>(''); // '' = Alle
+    const [statusFilter, setStatusFilter] = useState('');
 
-    useEffect(() => {
-        fetch('http://localhost:8080/projects')
-            .then((res) => res.json())
-            .then((json) => {
-                setData(json);
-                setFiltered(json);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
-    }, []);
+    const filtered = projects.filter(p =>
+        (!nameFilter || p.name.toLowerCase().includes(nameFilter.toLowerCase())) &&
+        (!statusFilter || p.status === statusFilter)
+    );
 
-    useEffect(() => {
-        let result = data;
-
-        if (nameFilter) {
-            result = result.filter((e) =>
-                e.name.toLowerCase().includes(nameFilter.toLowerCase())
-            );
-        }
-
-        if (statusFilter) {
-            result = result.filter((e) => e.status === statusFilter);
-        }
-
-        setFiltered(result);
-    }, [nameFilter, statusFilter, data]);
-
-    async function deleteProject(id: number) {
+    const deleteProject = async (id: number) => {
         if (!confirm('Projekt wirklich löschen?')) return;
-
         try {
-            const res = await fetch(`http://localhost:8080/projects/${id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-            });
-
-            if (!res.ok) {
-                throw new Error('Löschen fehlgeschlagen');
-            }
-            setData((prev) => prev.filter((p) => p.id !== id));
-        } catch (error) {
-            console.error(error);
+            const res = await fetch(`http://localhost:8080/projects/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Löschen fehlgeschlagen');
+            await refreshProjects();
+        } catch (err) {
+            console.error(err);
             alert('Fehler beim Löschen des Projekts.');
         }
-    }
+    };
 
-    if (loading) {
-        return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
-    }
+    if (loading) return <div className="text-center py-10 text-gray-500">Loading…</div>;
 
     return (
         <div className="p-6 space-y-6">
@@ -83,17 +32,15 @@ export default function ProjectPage() {
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <div className="flex flex-wrap gap-4">
                     <input
-                        type="text"
                         placeholder="Projektname suchen..."
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={nameFilter}
-                        onChange={(e) => setNameFilter(e.target.value)}
+                        onChange={e => setNameFilter(e.target.value)}
                     />
-
                     <select
                         className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                        onChange={e => setStatusFilter(e.target.value)}
                     >
                         <option value="">Alle Status</option>
                         <option value="PLANNED">Geplant</option>
@@ -116,36 +63,28 @@ export default function ProjectPage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.map((project) => (
-                        <tr key={project.id} className="border-t hover:bg-blue-50 transition">
-                            <td className="px-6 py-4">{project.id}</td>
-                            <td className="px-6 py-4">{project.name}</td>
-                            <td className="px-6 py-4">{project.manager}</td>
-                            <td className="px-6 py-4">{project.budget} €</td>
+                    {filtered.map(p => (
+                        <tr key={p.id} className="border-t hover:bg-blue-50 transition">
+                            <td className="px-6 py-4">{p.id}</td>
+                            <td className="px-6 py-4">{p.name}</td>
+                            <td className="px-6 py-4">{p.manager}</td>
+                            <td className="px-6 py-4">{p.budget} €</td>
                             <td className="px-6 py-4">
-                                <span
-                                    className={`px-2 py-1 rounded-full text-sm font-medium ${
-                                        project.status === 'PLANNED'
-                                            ? 'bg-yellow-100 text-yellow-800'
-                                            : project.status === 'ACTIVE'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-gray-300 text-gray-800'
-                                    }`}
-                                >
-                                    {project.status}
-                                </span>
+                  <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+                      p.status === 'PLANNED' ? 'bg-yellow-100 text-yellow-800' :
+                          p.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
+                              'bg-gray-300 text-gray-800'
+                  }`}>{p.status}</span>
                             </td>
                             <td className="px-6 py-4">
-                                <button
-                                    onClick={() => deleteProject(project.id)}
-                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
+                                <button onClick={() => deleteProject(p.id)}
+                                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Löschen
                                 </button>
                             </td>
                         </tr>
                     ))}
-
                     {filtered.length === 0 && (
                         <tr>
                             <td colSpan={6} className="text-center py-6 text-gray-500">

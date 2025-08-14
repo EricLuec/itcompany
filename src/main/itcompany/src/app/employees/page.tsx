@@ -1,48 +1,24 @@
 'use client';
-
-import { useEffect, useState } from 'react';
-
-type Employee = {
-    id: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    salary: number;
-    hireDate: string;
-    manager: string;
-    items: any[];
-};
+import { useState, useEffect } from 'react';
+import { useEmployees, Employee } from '@/context/EmployeeContext';
 
 export default function EmployeePage() {
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const { employees, setEmployees, refreshEmployees } = useEmployees();
     const [filtered, setFiltered] = useState<Employee[]>([]);
     const [loading, setLoading] = useState(true);
-
     const [nameFilter, setNameFilter] = useState('');
     const [managerFilter, setManagerFilter] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:8080/employees')
-            .then(res => res.json())
-            .then(data => {
-                setEmployees(data);
-                setFiltered(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error('Error loading employees:', err);
-                setLoading(false);
-            });
-    }, []);
+        if (employees.length > 0) setLoading(false);
+    }, [employees]);
 
     useEffect(() => {
         let result = employees;
 
         if (nameFilter) {
             result = result.filter(e =>
-                (e.firstName + ' ' + e.lastName)
-                    .toLowerCase()
-                    .includes(nameFilter.toLowerCase())
+                `${e.firstName} ${e.lastName}`.toLowerCase().includes(nameFilter.toLowerCase())
             );
         }
 
@@ -59,14 +35,9 @@ export default function EmployeePage() {
         if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
 
         try {
-            const res = await fetch(`http://localhost:8080/employees/${id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-            });
+            const res = await fetch(`http://localhost:8080/employees/${id}`, { method: 'DELETE' });
 
-            if (!res.ok) {
-                throw new Error(`Fehler beim Löschen: ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`Fehler beim Löschen: ${res.status}`);
 
             setEmployees(prev => prev.filter(e => e.id !== id));
         } catch (err) {
@@ -80,7 +51,7 @@ export default function EmployeePage() {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 max-w-7xl mx-auto">
             <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
                 <h2 className="text-lg font-semibold">Filter</h2>
                 <div className="flex flex-wrap gap-4">
@@ -91,7 +62,6 @@ export default function EmployeePage() {
                         value={nameFilter}
                         onChange={(e) => setNameFilter(e.target.value)}
                     />
-
                     <input
                         type="text"
                         placeholder="Search manager..."
@@ -117,15 +87,13 @@ export default function EmployeePage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.map((emp) => (
+                    {filtered.map(emp => (
                         <tr key={emp.id} className="border-t hover:bg-blue-50 transition">
                             <td className="px-6 py-4">{emp.id}</td>
                             <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
                             <td className="px-6 py-4">{emp.email}</td>
                             <td className="px-6 py-4">{emp.salary} €</td>
-                            <td className="px-6 py-4">
-                                {emp.hireDate ? new Date(emp.hireDate).toLocaleDateString() : '—'}
-                            </td>
+                            <td className="px-6 py-4">{emp.hireDate ? new Date(emp.hireDate).toLocaleDateString() : '—'}</td>
                             <td className="px-6 py-4">{emp.manager || '—'}</td>
                             <td className="px-6 py-4">{emp.items?.length || 0}</td>
                             <td className="px-6 py-4">

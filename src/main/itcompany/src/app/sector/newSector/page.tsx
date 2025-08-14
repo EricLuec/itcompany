@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-type SalaryClass = 'A' | 'B' | 'C' | 'D';
+import { useSectors, SalaryClass } from '@/context/SectorContext';
 
-export default function CreateEmployeeForm() {
+export default function CreateSectorForm() {
+    const { refreshSectors } = useSectors();
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [salaryClass, setSalaryClass] = useState<SalaryClass>('A');
@@ -25,6 +27,9 @@ export default function CreateEmployeeForm() {
                 setName('');
                 setDescription('');
                 setSalaryClass('A');
+
+                // Context aktualisieren
+                await refreshSectors();
             } else {
                 setStatus('error');
             }
@@ -80,7 +85,7 @@ export default function CreateEmployeeForm() {
                 <div className="text-green-600 text-sm">Successfully created Sector!</div>
             )}
             {status === 'error' && (
-                <div className="text-red-600 text-sm">Error. try again.</div>
+                <div className="text-red-600 text-sm">Error. Try again.</div>
             )}
         </div>
     );

@@ -1,60 +1,19 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
 
-type Sector = {
-    id: number;
-    name: string;
-};
-
-type Building = {
-    id: number;
-    name: string;
-    description: string;
-    city: string;
-    capacity: number;
-    buildingDate: string;
-    sectorList: Sector[];
-};
+import { useState, useMemo } from 'react';
+import { useBuildings, Building } from '@/context/BuildingContext';
 
 export default function BuildingPage() {
-    const [data, setData] = useState<Building[]>([]);
-    const [filtered, setFiltered] = useState<Building[]>([]);
-    const [loading, setLoading] = useState(true);
-
+    const { buildings, loading } = useBuildings();
     const [cityFilter, setCityFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('');
 
-    useEffect(() => {
-        fetch('http://localhost:8080/buildings')
-            .then((res) => res.json())
-            .then((json) => {
-                setData(json);
-                setFiltered(json);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        let result = data;
-
-        if (cityFilter) {
-            result = result.filter((b) =>
-                b.city.toLowerCase().includes(cityFilter.toLowerCase())
-            );
-        }
-
-        if (nameFilter) {
-            result = result.filter((b) =>
-                b.name.toLowerCase().includes(nameFilter.toLowerCase())
-            );
-        }
-
-        setFiltered(result);
-    }, [cityFilter, nameFilter, data]);
+    const filtered = useMemo(() => {
+        return buildings.filter((b) =>
+            (!cityFilter || b.city.toLowerCase().includes(cityFilter.toLowerCase())) &&
+            (!nameFilter || b.name.toLowerCase().includes(nameFilter.toLowerCase()))
+        );
+    }, [buildings, cityFilter, nameFilter]);
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;

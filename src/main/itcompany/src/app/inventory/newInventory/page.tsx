@@ -1,19 +1,16 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import { useState } from 'react';
+import { useEmployeeContext } from '@/context/EmployeeContext';
 
 type Building = {
     id: number;
     name: string;
 };
 
-type Employee = {
-    id: number;
-    firstName: string;
-    lastName: string;
-};
-
 export default function CreateInventoryForm() {
+    const { employees } = useEmployeeContext(); // Context nutzen
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const today = new Date().toISOString().split('T')[0];
@@ -21,22 +18,16 @@ export default function CreateInventoryForm() {
     const [buildingId, setBuildingId] = useState<number | ''>('');
     const [employeeId, setEmployeeId] = useState<number | ''>('');
     const [generalValue, setGeneralValue] = useState<number | ''>('');
-
     const [buildings, setBuildings] = useState<Building[]>([]);
-    const [employees, setEmployees] = useState<Employee[]>([]);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-    useEffect(() => {
+    // Buildings weiterhin per fetch laden
+    useState(() => {
         fetch('http://localhost:8080/buildings')
             .then(res => res.json())
             .then(setBuildings)
             .catch(console.error);
-
-        fetch('http://localhost:8080/employees')
-            .then(res => res.json())
-            .then(setEmployees)
-            .catch(console.error);
-    }, []);
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -67,7 +58,7 @@ export default function CreateInventoryForm() {
                 setFormStatus('success');
                 setName('');
                 setDescription('');
-                setCreatedDate('');
+                setCreatedDate(today);
                 setBuildingId('');
                 setEmployeeId('');
                 setGeneralValue('');

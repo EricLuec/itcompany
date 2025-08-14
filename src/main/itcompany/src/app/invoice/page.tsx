@@ -1,17 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useBudgets } from '@/context/CompanyBudgetContext';
 
 export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
-
-export type CompanyBudget = {
-    id: number;
-    name: string;
-};
 
 export type Invoice = {
     id: number;
     client: string;
-    companyBudget: CompanyBudget | null;
+    companyBudgetId: number | null; // nur ID, wir holen Name aus Context
     issueDate: string;
     dueDate: string;
     totalAmount: number;
@@ -19,19 +15,22 @@ export type Invoice = {
 };
 
 export default function InvoicePage() {
-    const [data, setData] = useState<Invoice[]>([]);
+    const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [filtered, setFiltered] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
 
     const [clientFilter, setClientFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState<InvoiceStatus | ''>('');
 
+    const { budgets } = useBudgets(); // Budgets aus Context
+
+    // Fetch invoices
     useEffect(() => {
         fetch('http://localhost:8080/invoices')
             .then((res) => res.json())
-            .then((json) => {
-                setData(json);
-                setFiltered(json);
+            .then((data) => {
+                setInvoices(data);
+                setFiltered(data);
                 setLoading(false);
             })
             .catch((err) => {
@@ -40,8 +39,9 @@ export default function InvoicePage() {
             });
     }, []);
 
+    // Filter invoices
     useEffect(() => {
-        let result = data;
+        let result = invoices;
 
         if (clientFilter) {
             result = result.filter((inv) =>
@@ -54,8 +54,9 @@ export default function InvoicePage() {
         }
 
         setFiltered(result);
-    }, [clientFilter, statusFilter, data]);
+    }, [clientFilter, statusFilter, invoices]);
 
+    // Delete invoice
     async function deleteInvoice(id: number) {
         if (!confirm('Diese Rechnung wirklich löschen?')) return;
 
@@ -69,7 +70,7 @@ export default function InvoicePage() {
                 throw new Error(`Fehler beim Löschen: ${res.status}`);
             }
 
-            setData((prev) => prev.filter((inv) => inv.id !== id));
+            setInvoices((prev) => prev.filter((inv) => inv.id !== id));
         } catch (err) {
             console.error(err);
             alert('Löschen fehlgeschlagen.');
@@ -79,6 +80,13 @@ export default function InvoicePage() {
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
     }
+
+    // Helper: Budget Name aus Context finden
+    const getBudgetName = (budgetId: number | null) => {
+        if (!budgetId) return '-';
+        const budget = budgets.find((b) => b.id === budgetId);
+        return budget ? budget.name : '-';
+    };
 
     return (
         <div className="p-6 space-y-6">
@@ -126,22 +134,22 @@ export default function InvoicePage() {
                         <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
                             <td className="px-6 py-4">{inv.id}</td>
                             <td className="px-6 py-4">{inv.client}</td>
-                            <td className="px-6 py-4">{inv.companyBudget?.name || '-'}</td>
+                            <td className="px-6 py-4">{getBudgetName(inv.companyBudgetId)}</td>
                             <td className="px-6 py-4">{new Date(inv.issueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{new Date(inv.dueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{inv.totalAmount} CHF</td>
                             <td className="px-6 py-4">
-                                    <span
-                                        className={`px-2 py-1 rounded-full text-sm font-medium ${
-                                            inv.status === 'PAID'
-                                                ? 'bg-green-100 text-green-800'
-                                                : inv.status === 'OVERDUE'
-                                                    ? 'bg-red-100 text-red-800'
-                                                    : 'bg-yellow-100 text-yellow-800'
-                                        }`}
-                                    >
-                                        {inv.status}
-                                    </span>
+                                <span
+                                    className={`px-2 py-1 rounded-full text-sm font-medium ${
+                                        inv.status === 'PAID'
+                                            ? 'bg-green-100 text-green-800'
+                                            : inv.status === 'OVERDUE'
+                                                ? 'bg-red-100 text-red-800'
+                                                : 'bg-yellow-100 text-yellow-800'
+                                    }`}
+                                >
+                                    {inv.status}
+                                </span>
                             </td>
                             <td className="px-6 py-4">
                                 <button

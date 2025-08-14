@@ -1,12 +1,8 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
-
-type Inventory = {
-    id: number;
-    name: string;
-};
+import { useInventories } from '@/context/InventoryContext'; // Dein InventoryContext-Hook
 
 type SelectOption = {
     label: string;
@@ -14,15 +10,14 @@ type SelectOption = {
 };
 
 export default function CreateItemForm() {
+    const { inventories, loading, refreshInventories } = useInventories();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState<number | ''>('');
     const [purchaseDate, setPurchaseDate] = useState(() =>
         new Date().toISOString().split('T')[0]
     );
-    const [selectedInventories, setSelectedInventories] = useState<{ label: string; value: number }[]>([]);
-
-    const [inventories, setInventories] = useState<Inventory[]>([]);
+    const [selectedInventories, setSelectedInventories] = useState<SelectOption[]>([]);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     const inventoryOptions: SelectOption[] = inventories.map((inv) => ({
@@ -31,11 +26,9 @@ export default function CreateItemForm() {
     }));
 
     useEffect(() => {
-        fetch('http://localhost:8080/inventory')
-            .then((res) => res.json())
-            .then(setInventories)
-            .catch(console.error);
-    }, []);
+        // Optional: Inventories beim Mounten aktualisieren
+        refreshInventories().catch(console.error);
+    }, [refreshInventories]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,7 +51,7 @@ export default function CreateItemForm() {
 
             const createdItem = await res.json();
 
-            // Jetzt: Item den Inventories zuweisen
+            // Item den Inventories zuweisen
             await Promise.all(
                 selectedInventories.map(inv =>
                     fetch(`http://localhost:8080/inventory/${inv.value}/items`, {
@@ -81,6 +74,7 @@ export default function CreateItemForm() {
         }
     };
 
+    if (loading) return <div className="text-center p-6">Loading inventories...</div>;
 
     return (
         <div className="max-w-2xl mx-auto p-6">
@@ -119,7 +113,7 @@ export default function CreateItemForm() {
                             isMulti
                             options={inventoryOptions}
                             value={selectedInventories}
-                            onChange={(selected) => setSelectedInventories(selected as any)}
+                            onChange={(selected) => setSelectedInventories(selected as SelectOption[])}
                             className="text-black"
                             classNamePrefix="react-select"
                         />
