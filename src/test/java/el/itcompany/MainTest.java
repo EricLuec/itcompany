@@ -9,6 +9,6 @@ public class MainTest {
     public void testMainMethodExists() {
         assertDoesNotThrow(() -> ITCompany.main(new String[0]));
     }
-    
+
  */
 }
