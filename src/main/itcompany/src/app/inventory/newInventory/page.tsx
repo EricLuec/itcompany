@@ -2,32 +2,22 @@
 
 import { useState } from 'react';
 import { useEmployeeContext } from '@/context/EmployeeContext';
-import {useInventories} from '@/context/InventoryContext';
-
-type Building = {
-    id: number;
-    name: string;
-};
+import { useInventories } from '@/context/InventoryContext';
+import { useBuildings } from '@/context/BuildingContext';
 
 export default function CreateInventoryForm() {
     const { employees } = useEmployeeContext();
-    const {refreshInventories} = useInventories();
+    const { refreshInventories } = useInventories();
+    const { buildings } = useBuildings();
+
+    const today = new Date().toISOString().split('T')[0];
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const today = new Date().toISOString().split('T')[0];
     const [createdDate, setCreatedDate] = useState(today);
     const [buildingId, setBuildingId] = useState<number | ''>('');
     const [employeeId, setEmployeeId] = useState<number | ''>('');
     const [generalValue, setGeneralValue] = useState<number | ''>('');
-    const [buildings, setBuildings] = useState<Building[]>([]);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-    useState(() => {
-        fetch('http://localhost:8080/buildings')
-            .then(res => res.json())
-            .then(setBuildings)
-            .catch(console.error);
-    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
