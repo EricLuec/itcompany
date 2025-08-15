@@ -2,14 +2,16 @@ name: Frontend CI (Next.js + Bun)
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
 
 jobs:
   frontend:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./src/main/itcompany
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
