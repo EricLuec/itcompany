@@ -33,7 +33,6 @@ export function InventoryProvider({ children }: { children: ReactNode }) {
 
     const deleteInventory = async (id: number) => {
         try {
-            // Löschen des Inventars vom Server
             const res = await fetch(`http://localhost:8080/inventory/${id}`, {
                 method: 'DELETE',
             });

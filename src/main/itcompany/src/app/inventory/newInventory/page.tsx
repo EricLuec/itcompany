@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useEmployeeContext } from '@/context/EmployeeContext';
+import {useInventories} from '@/context/InventoryContext';
 
 type Building = {
     id: number;
@@ -9,8 +10,8 @@ type Building = {
 };
 
 export default function CreateInventoryForm() {
-    const { employees } = useEmployeeContext(); // Context nutzen
-
+    const { employees } = useEmployeeContext();
+    const {refreshInventories} = useInventories();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const today = new Date().toISOString().split('T')[0];
@@ -21,7 +22,6 @@ export default function CreateInventoryForm() {
     const [buildings, setBuildings] = useState<Building[]>([]);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-    // Buildings weiterhin per fetch laden
     useState(() => {
         fetch('http://localhost:8080/buildings')
             .then(res => res.json())
@@ -62,6 +62,7 @@ export default function CreateInventoryForm() {
                 setBuildingId('');
                 setEmployeeId('');
                 setGeneralValue('');
+                refreshInventories();
             } else {
                 setFormStatus('error');
             }

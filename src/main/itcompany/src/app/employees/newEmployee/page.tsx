@@ -10,7 +10,7 @@ type ManagerOption = {
 };
 
 export default function CreateEmployeeForm() {
-    const { employees, addEmployee } = useEmployeeContext();
+    const { employees, addEmployee, refreshEmployees } = useEmployeeContext();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -55,6 +55,7 @@ export default function CreateEmployeeForm() {
                 setManager(null);
                 setHireDate('');
                 setFormStatus('success');
+                await refreshEmployees();
             } else {
                 setFormStatus('error');
             }

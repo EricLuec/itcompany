@@ -45,7 +45,6 @@ public class EmployeeController {
                     employee.setSalary(employeeDetails.getSalary());
                     employee.setHireDate(employeeDetails.getHireDate());
                     employee.setManager(employeeDetails.getManager());
-                    // Weitere Felder hier setzen, falls nötig
                     return employeeService.updateEmployee(id, employee);
                 })
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
@@ -55,5 +54,12 @@ public class EmployeeController {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/allIds")
+    public ResponseEntity<List<Long>> getAllEmployeeIDs() {
+        List<Long> employeeIds = employeeService.getAllEmployeeIds();
+
+        return ResponseEntity.ok(employeeIds);
     }
 }
