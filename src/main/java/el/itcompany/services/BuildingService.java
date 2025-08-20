@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +59,11 @@ public class BuildingService {
             building.getSectorList().remove(sector);
             return buildingRepository.save(building);
         }).orElseThrow(() -> new RuntimeException("Sector or Building not found"));
+    }
+
+    public List<Long> getAllBuildingIds() {
+        return buildingRepository.findAll().stream()
+                .map(Building::getId)
+                .collect(Collectors.toList());
     }
 }

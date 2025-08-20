@@ -12,7 +12,7 @@ export default function BuildingPage() {
         if (!buildings.length) {
             refreshBuildings();
         }
-    }, [buildings, refreshBuildings]);
+    }, [refreshBuildings]);
 
     const filtered = useMemo(() => {
         return buildings.filter((b) =>

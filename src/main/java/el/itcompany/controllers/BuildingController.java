@@ -67,4 +67,11 @@ public class BuildingController {
         buildingService.deleteBuilding(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/allIds")
+    public ResponseEntity<List<Long>> getAllBuildingIds() {
+        List<Long> buildingIds = buildingService.getAllBuildingIds();
+
+        return ResponseEntity.ok(buildingIds);
+    }
 }

@@ -27,7 +27,7 @@ export default function HomePage() {
                 console.error(err);
                 setLoading(false);
             });
-    }, []);
+    }, [setEntries]);
 
     if (loading) {
         return (
@@ -38,7 +38,7 @@ export default function HomePage() {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4 p-6 overflow-scroll h-100 margin">
             {entries.map((entry) => {
                 const date = entry.timestamp ? new Date(entry.timestamp) : null;
                 const dateStr =
