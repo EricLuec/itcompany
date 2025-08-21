@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSectors, Sector } from '@/context/SectorContext';
 
 export default function SectorPage() {
-    const { sectors, deleteSector } = useSectors();
+    const { sectors, deleteSector, refreshSectors } = useSectors();
     const [filtered, setFiltered] = useState<Sector[]>([]);
     const [nameFilter, setNameFilter] = useState('');
     const [salaryFilter, setSalaryFilter] = useState<string>('');
@@ -23,7 +23,7 @@ export default function SectorPage() {
         }
 
         setFiltered(result);
-    }, [nameFilter, salaryFilter, sectors]);
+    }, [nameFilter, salaryFilter, sectors, refreshSectors]);
 
     const handleDelete = (id: number) => {
         if (window.confirm('Möchten Sie diesen Sektor wirklich löschen?')) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,12 @@ public class SectorService {
 
     public void deleteSector(Long id) {
         sectorRepository.deleteById(id);
+    }
+
+    public List<Long> getAllSectorIds() {
+        return sectorRepository.findAll().stream()
+                .map(Sector::getId)
+                .collect(Collectors.toList());
     }
 
 }

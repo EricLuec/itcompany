@@ -28,7 +28,7 @@ export default function CreateSectorForm() {
                 setDescription('');
                 setSalaryClass('A');
 
-                await refreshSectors();
+                refreshSectors();
             } else {
                 setStatus('error');
             }

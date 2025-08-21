@@ -48,4 +48,11 @@ public class SectorController {
         sectorService.deleteSector(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/allIds")
+    public ResponseEntity<List<Long>> getAllSectorIds() {
+        List<Long> sectorIds = sectorService.getAllSectorIds();
+
+        return ResponseEntity.ok(sectorIds);
+    }
 }
