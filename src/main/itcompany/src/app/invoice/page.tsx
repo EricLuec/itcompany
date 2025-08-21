@@ -7,7 +7,7 @@ export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
 export type Invoice = {
     id: number;
     client: string;
-    companyBudgetId: number | null; // nur ID, wir holen Name aus Context
+    companyBudgetId: number | null;
     issueDate: string;
     dueDate: string;
     totalAmount: number;
@@ -24,7 +24,6 @@ export default function InvoicePage() {
 
     const { budgets } = useBudgets(); // Budgets aus Context
 
-    // Fetch invoices
     useEffect(() => {
         fetch('http://localhost:8080/invoices')
             .then((res) => res.json())
@@ -39,7 +38,6 @@ export default function InvoicePage() {
             });
     }, []);
 
-    // Filter invoices
     useEffect(() => {
         let result = invoices;
 
@@ -56,7 +54,6 @@ export default function InvoicePage() {
         setFiltered(result);
     }, [clientFilter, statusFilter, invoices]);
 
-    // Delete invoice
     async function deleteInvoice(id: number) {
         if (!confirm('Diese Rechnung wirklich löschen?')) return;
 
@@ -81,7 +78,6 @@ export default function InvoicePage() {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
     }
 
-    // Helper: Budget Name aus Context finden
     const getBudgetName = (budgetId: number | null) => {
         if (!budgetId) return '-';
         const budget = budgets.find((b) => b.id === budgetId);

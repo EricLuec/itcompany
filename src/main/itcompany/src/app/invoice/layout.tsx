@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { InvoiceProvider } from '@/context/InvoiceContext'; // Pfad anpassen
+import { InvoiceProvider } from '@/context/InvoiceContext';
 
 export default function InvoiceLayout({ children }: { children: React.ReactNode }) {
     return (
