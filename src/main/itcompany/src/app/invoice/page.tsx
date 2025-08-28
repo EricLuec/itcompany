@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useBudgets } from '@/context/CompanyBudgetContext';
+import {useInvoices} from "@/context/InvoiceContext";
 
 export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
 
@@ -15,14 +16,12 @@ export type Invoice = {
 };
 
 export default function InvoicePage() {
-    const [invoices, setInvoices] = useState<Invoice[]>([]);
+    const { invoices, setInvoices} = useInvoices();
     const [filtered, setFiltered] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
 
     const [clientFilter, setClientFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState<InvoiceStatus | ''>('');
-
-    const { budgets } = useBudgets(); // Budgets aus Context
 
     useEffect(() => {
         fetch('http://localhost:8080/invoices')
@@ -51,7 +50,7 @@ export default function InvoicePage() {
             result = result.filter((inv) => inv.status === statusFilter);
         }
 
-        setFiltered(result);
+        setFiltered(filtered);
     }, [clientFilter, statusFilter, invoices]);
 
     async function deleteInvoice(id: number) {
@@ -80,8 +79,8 @@ export default function InvoicePage() {
 
     const getBudgetName = (budgetId: number | null) => {
         if (!budgetId) return '-';
-        const budget = budgets.find((b) => b.id === budgetId);
-        return budget ? budget.name : '-';
+        const budget = invoices.find((b) => b.id === budgetId);
+        return budget ? budget.client : '-';
     };
 
     return (
