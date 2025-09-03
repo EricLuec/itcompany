@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import {createContext, useContext, useEffect, useState, ReactNode, useCallback} from 'react';
 
 export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
 
@@ -22,6 +22,7 @@ type InvoiceContextType = {
     invoices: Invoice[];
     setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
     loading: boolean;
+    deleteInvoice: (id: number) => Promise<void>;
 };
 
 const InvoiceContext = createContext<InvoiceContextType | undefined>(undefined);
@@ -30,21 +31,41 @@ export function InvoiceProvider({ children }: { children: ReactNode }) {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetch('http://localhost:8080/invoices')
-            .then((res) => res.json())
-            .then((json) => {
-                setInvoices(json);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
+    const refreshInvoices = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('http://localhost:8080/invoices');
+            const data = await res.json();
+            setInvoices(data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
+    const deleteInvoice = async (id: number) => {
+        try {
+            const res = await fetch(`http://localhost:8080/invoices/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to delete invoice');
+            }
+
+            setInvoices((prevInventories) => prevInventories.filter((inv) => inv.id !== id));
+        } catch (err) {
+            console.error('Error deleting inventory:', err);
+        }
+    };
+
+    useEffect(() => {
+        refreshInvoices().catch(console.error);
+    }, [refreshInvoices]);
+
     return (
-        <InvoiceContext.Provider value={{ invoices, setInvoices, loading }}>
+        <InvoiceContext.Provider value={{ invoices, setInvoices, loading, deleteInvoice }}>
             {children}
         </InvoiceContext.Provider>
     );

@@ -1,6 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { useBudgets } from '@/context/CompanyBudgetContext';
+import { useState } from 'react';
 import {useInvoices} from "@/context/InvoiceContext";
 
 export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE';
@@ -16,62 +15,17 @@ export type Invoice = {
 };
 
 export default function InvoicePage() {
-    const { invoices, setInvoices} = useInvoices();
-    const [filtered, setFiltered] = useState<Invoice[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { invoices, deleteInvoice, loading } = useInvoices();
 
     const [clientFilter, setClientFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState<InvoiceStatus | ''>('');
 
-    useEffect(() => {
-        fetch('http://localhost:8080/invoices')
-            .then((res) => res.json())
-            .then((data) => {
-                setInvoices(data);
-                setFiltered(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Fetch error:', err);
-                setLoading(false);
-            });
-    }, []);
-
-    useEffect(() => {
-        let result = invoices;
-
-        if (clientFilter) {
-            result = result.filter((inv) =>
-                inv.client.toLowerCase().includes(clientFilter.toLowerCase())
-            );
-        }
-
-        if (statusFilter) {
-            result = result.filter((inv) => inv.status === statusFilter);
-        }
-
-        setFiltered(filtered);
-    }, [clientFilter, statusFilter, invoices]);
-
-    async function deleteInvoice(id: number) {
-        if (!confirm('Diese Rechnung wirklich löschen?')) return;
-
-        try {
-            const res = await fetch(`http://localhost:8080/invoices/${id}`, {
-                method: 'DELETE',
-                mode: 'cors',
-            });
-
-            if (!res.ok) {
-                throw new Error(`Fehler beim Löschen: ${res.status}`);
-            }
-
-            setInvoices((prev) => prev.filter((inv) => inv.id !== id));
-        } catch (err) {
-            console.error(err);
-            alert('Löschen fehlgeschlagen.');
-        }
-    }
+    const filtered = invoices.filter(invoice =>
+        invoice.client.toLowerCase().includes(clientFilter.toLowerCase()) &&
+        ` ${invoice.status ?? ''}`
+            .toLowerCase()
+            .includes(statusFilter.toLowerCase())
+    );
 
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Data…</div>;
@@ -129,7 +83,7 @@ export default function InvoicePage() {
                         <tr key={inv.id} className="border-t hover:bg-blue-50 transition">
                             <td className="px-6 py-4">{inv.id}</td>
                             <td className="px-6 py-4">{inv.client}</td>
-                            <td className="px-6 py-4">{getBudgetName(inv.companyBudgetId)}</td>
+                            <td className="px-6 py-4">{getBudgetName(inv.companyBudget?.id!)}</td>
                             <td className="px-6 py-4">{new Date(inv.issueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{new Date(inv.dueDate).toLocaleDateString()}</td>
                             <td className="px-6 py-4">{inv.totalAmount} CHF</td>
