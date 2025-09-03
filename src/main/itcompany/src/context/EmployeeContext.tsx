@@ -2,6 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+export interface Sector {
+    id: number;
+    name: string;
+    code: string;
+}
+
 export interface Employee {
     id: number;
     firstName: string;
@@ -11,6 +17,7 @@ export interface Employee {
     hireDate: string;
     manager?: string;
     items?: any[];
+    sector?: Sector;
 }
 
 interface EmployeeContextType {
