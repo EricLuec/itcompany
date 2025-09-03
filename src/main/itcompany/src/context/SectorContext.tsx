@@ -22,7 +22,6 @@ const SectorContext = createContext<SectorContextType | undefined>(undefined);
 export const SectorProvider = ({ children }: { children: ReactNode }) => {
     const [sectors, setSectors] = useState<Sector[]>([]);
 
-    // Fetch the sectors from the server
     const fetchSectors = async () => {
         try {
             const res = await fetch('http://localhost:8080/sectors');
@@ -33,7 +32,6 @@ export const SectorProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    // Delete a sector
     const deleteSector = async (id: number) => {
         try {
             const res = await fetch(`http://localhost:8080/sectors/${id}`, {
@@ -44,7 +42,6 @@ export const SectorProvider = ({ children }: { children: ReactNode }) => {
                 throw new Error('Failed to delete sector');
             }
 
-            // Update local state after deletion
             setSectors((prevSectors) => prevSectors.filter((sector) => sector.id !== id));
         } catch (err) {
             console.error('Error deleting sector:', err);

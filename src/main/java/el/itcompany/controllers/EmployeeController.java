@@ -29,7 +29,6 @@ public class EmployeeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PostMapping
     public Employee createEmployee(@RequestBody Employee employee) {
         return employeeService.createEmployee(employee);
@@ -45,6 +44,7 @@ public class EmployeeController {
                     employee.setSalary(employeeDetails.getSalary());
                     employee.setHireDate(employeeDetails.getHireDate());
                     employee.setManager(employeeDetails.getManager());
+                    employee.setSector(employeeDetails.getSector());
                     return employeeService.updateEmployee(id, employee);
                 })
                 .orElseThrow(() -> new RuntimeException("Employee not found"));

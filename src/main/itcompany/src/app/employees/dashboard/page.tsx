@@ -50,11 +50,11 @@ export default function DashboardPage() {
 
             const departmentSalaries = employees.reduce((acc, emp) => {
                 if (emp.sector) {
-                    if (!acc[emp.sector.name]) {
-                        acc[emp.sector.name] = { totalSalary: 0, employeeCount: 0 };
+                    if (!acc[emp.sector.id]) {
+                        acc[emp.sector.id] = { totalSalary: 0, employeeCount: 0 };
                     }
-                    acc[emp.sector.name].totalSalary += emp.salary;
-                    acc[emp.sector.name].employeeCount++;
+                    acc[emp.sector.id].totalSalary += emp.salary;
+                    acc[emp.sector.id].employeeCount++;
                 }
                 return acc;
             }, {} as Record<string, { totalSalary: number; employeeCount: number }>);

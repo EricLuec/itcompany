@@ -2,13 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { useEmployees, Employee } from '@/context/EmployeeContext';
+import { useSectors, Sector } from '@/context/SectorContext';
+import Select from 'react-select';
+
+type SectorOption = { value: number; label: string };
 
 export default function EmployeePage() {
-    const { employees, setEmployees, refreshEmployees, deleteEmployee } = useEmployees();
+    const { employees, setEmployees, deleteEmployee } = useEmployees();
+    const { sectors } = useSectors();
+
     const [filtered, setFiltered] = useState<Employee[]>([]);
     const [loading, setLoading] = useState(true);
     const [nameFilter, setNameFilter] = useState('');
     const [managerFilter, setManagerFilter] = useState('');
+    const [sectorFilter, setSectorFilter] = useState('');
     const [editEmployee, setEditEmployee] = useState<Employee | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -31,8 +38,14 @@ export default function EmployeePage() {
             );
         }
 
+        if (sectorFilter) {
+            result = result.filter(e =>
+                e.sector?.name?.toLowerCase().includes(sectorFilter.toLowerCase())
+            );
+        }
+
         setFiltered(result);
-    }, [nameFilter, managerFilter, employees]);
+    }, [nameFilter, managerFilter, sectorFilter, employees]);
 
     async function handleDelete(id: number) {
         if (!confirm('Diesen Mitarbeiter wirklich löschen?')) return;
@@ -48,9 +61,7 @@ export default function EmployeePage() {
         try {
             const res = await fetch(`http://localhost:8080/employees/${employee.id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(employee),
             });
 
@@ -69,6 +80,11 @@ export default function EmployeePage() {
     if (loading) {
         return <div className="text-center py-10 text-gray-500">Loading Employees…</div>;
     }
+
+    const sectorOptions: SectorOption[] = sectors.map(s => ({
+        value: s.id,
+        label: s.name,
+    }));
 
     return (
         <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -89,6 +105,13 @@ export default function EmployeePage() {
                         value={managerFilter}
                         onChange={(e) => setManagerFilter(e.target.value)}
                     />
+                    <input
+                        type="text"
+                        placeholder="Search sector..."
+                        className="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        value={sectorFilter}
+                        onChange={(e) => setSectorFilter(e.target.value)}
+                    />
                 </div>
             </div>
 
@@ -102,6 +125,7 @@ export default function EmployeePage() {
                         <th className="px-6 py-3">Salary</th>
                         <th className="px-6 py-3">Hire-Date</th>
                         <th className="px-6 py-3">Manager</th>
+                        <th className="px-6 py-3">Sector</th>
                         <th className="px-6 py-3">Items</th>
                         <th className="px-6 py-3">Aktionen</th>
                     </tr>
@@ -115,6 +139,7 @@ export default function EmployeePage() {
                             <td className="px-6 py-4">{emp.salary} €</td>
                             <td className="px-6 py-4">{emp.hireDate ? new Date(emp.hireDate).toLocaleDateString() : '—'}</td>
                             <td className="px-6 py-4">{emp.manager || '—'}</td>
+                            <td className="px-6 py-4">{emp.sector?.name || '—'}</td>
                             <td className="px-6 py-4">{emp.items?.length || 0}</td>
                             <td className="px-6 py-4">
                                 <button
@@ -134,7 +159,7 @@ export default function EmployeePage() {
                     ))}
                     {filtered.length === 0 && (
                         <tr>
-                            <td colSpan={8} className="text-center py-6 text-gray-500">
+                            <td colSpan={9} className="text-center py-6 text-gray-500">
                                 No employees found.
                             </td>
                         </tr>
@@ -143,6 +168,7 @@ export default function EmployeePage() {
                 </table>
             </div>
 
+            {/* Edit Modal */}
             {isEditing && editEmployee && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-xl max-w-lg w-full">
@@ -188,20 +214,28 @@ export default function EmployeePage() {
                                     onChange={(e) => setEditEmployee({ ...editEmployee, hireDate: e.target.value })}
                                     className="w-full border px-4 py-2 rounded"
                                 />
-                                <select
+
+                                <Select
+                                    options={sectorOptions}
+                                    value={editEmployee.sector ? { value: editEmployee.sector.id, label: editEmployee.sector.name } : null}
+                                    onChange={(option) => {
+                                        const found = sectors.find(s => s.id === option?.value);
+                                        setEditEmployee({ ...editEmployee, sector: found || undefined });
+                                    }}
+                                    isClearable
+                                    placeholder="Select sector..."
+                                    className="rounded"
+                                    classNamePrefix="react-select"
+                                />
+
+                                <input
+                                    type="text"
                                     value={editEmployee.manager || ''}
                                     onChange={(e) => setEditEmployee({ ...editEmployee, manager: e.target.value })}
                                     className="w-full border px-4 py-2 rounded"
-                                >
-                                    <option value="">Select Manager</option>
-                                    {employees
-                                        .filter(emp => emp.id !== editEmployee.id)
-                                        .map(emp => (
-                                            <option key={emp.id} value={emp.firstName + ' ' + emp.lastName}>
-                                                {emp.firstName} {emp.lastName}
-                                            </option>
-                                        ))}
-                                </select>
+                                    placeholder="Manager"
+                                />
+
                                 <div className="flex justify-end gap-4">
                                     <button
                                         type="button"

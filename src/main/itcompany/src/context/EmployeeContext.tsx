@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 export interface Sector {
     id: number;
     name: string;
-    code: string;
+    salaryClass: string;
 }
 
 export interface Employee {
@@ -34,7 +34,6 @@ const EmployeeContext = createContext<EmployeeContextType | undefined>(undefined
 export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
     const [employees, setEmployees] = useState<Employee[]>([]);
 
-    // Employees vom Backend laden
     const refreshEmployees = async () => {
         try {
             const res = await fetch('http://localhost:8080/employees');
@@ -52,7 +51,6 @@ export const EmployeeProvider = ({ children }: { children: ReactNode }) => {
 
             if (!res.ok) throw new Error(`Fehler beim Löschen: ${res.status}`);
 
-            // Mitarbeiter aus dem State entfernen
             setEmployees((prev) => prev.filter((e) => e.id !== id));
         } catch (err) {
             console.error(err);

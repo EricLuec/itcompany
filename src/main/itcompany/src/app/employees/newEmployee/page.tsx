@@ -3,14 +3,21 @@
 import { useState } from 'react';
 import Select from 'react-select';
 import { useEmployeeContext } from '@/context/EmployeeContext';
+import { useSectors, Sector } from '@/context/SectorContext';
 
 type ManagerOption = {
     value: number;
     label: string;
 };
 
+type SectorOption = {
+    value: number;
+    label: string;
+};
+
 export default function CreateEmployeeForm() {
     const { employees, addEmployee, refreshEmployees } = useEmployeeContext();
+    const { sectors } = useSectors();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -18,11 +25,17 @@ export default function CreateEmployeeForm() {
     const [salary, setSalary] = useState<number | ''>('');
     const [manager, setManager] = useState<ManagerOption | null>(null);
     const [hireDate, setHireDate] = useState('');
+    const [sector, setSector] = useState<SectorOption | null>(null);
     const [formStatus, setFormStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
     const managerOptions: ManagerOption[] = employees.map(e => ({
         value: e.id,
         label: `${e.firstName} ${e.lastName}`,
+    }));
+
+    const sectorOptions: SectorOption[] = sectors.map(s => ({
+        value: s.id,
+        label: s.name,
     }));
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -35,6 +48,9 @@ export default function CreateEmployeeForm() {
             salary: salary || 0,
             manager: manager ? manager.label : '',
             hireDate,
+            sector: sector
+                ? { id: sector.value, name: sector.label, description: '', salaryClass: 'A' as const }
+                : null,
         };
 
         try {
@@ -54,6 +70,7 @@ export default function CreateEmployeeForm() {
                 setSalary('');
                 setManager(null);
                 setHireDate('');
+                setSector(null);
                 setFormStatus('success');
                 await refreshEmployees();
             } else {
@@ -114,6 +131,19 @@ export default function CreateEmployeeForm() {
                         onChange={setManager}
                         isClearable
                         placeholder="Select manager..."
+                        className="rounded"
+                        classNamePrefix="react-select"
+                    />
+                </div>
+
+                <div>
+                    <label className="block mb-1 text-gray-700 font-medium">Sector</label>
+                    <Select
+                        options={sectorOptions}
+                        value={sector}
+                        onChange={setSector}
+                        isClearable
+                        placeholder="Select sector..."
                         className="rounded"
                         classNamePrefix="react-select"
                     />
