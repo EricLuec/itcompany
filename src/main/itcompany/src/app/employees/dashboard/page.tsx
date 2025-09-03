@@ -43,7 +43,7 @@ export default function DashboardPage() {
             }, {} as Record<string, number>);
 
             const salaryDistribution = employees.reduce((acc, emp) => {
-                const range = emp.salary < 3000 ? '0-3000' : emp.salary < 5000 ? '3000-5000' : '5000+';
+                const range = emp.salary < 3000 ? '0-3000' : emp.salary < 5000 ? '3000-5000' : emp.salary < 10000 ? '5000-10000' : '10000+';
                 acc[range] = acc[range] ? acc[range] + 1 : 1;
                 return acc;
             }, {} as Record<string, number>);
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             {
                 label: 'Average Salary by Department',
                 data: Object.values(stats.departmentSalaries),
-                backgroundColor: '#FF9F40',
+                backgroundColor: '#161716',
             },
         ],
     };
@@ -134,17 +134,17 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-semibold">Employee Dashboard</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div className="bg-blue-500 text-white p-6 rounded-xl shadow-lg">
+                    <div className="bg-white-500 text-black p-6 rounded-xl shadow-lg border border-gray-300">
                         <h3 className="text-xl font-semibold">Total Employees</h3>
                         <p className="text-2xl">{stats.totalEmployees}</p>
                     </div>
 
-                    <div className="bg-green-500 text-white p-6 rounded-xl shadow-lg">
+                    <div className="bg-white-500 text-green p-6 rounded-xl shadow-lg border border-gray-300">
                         <h3 className="text-xl font-semibold">Average Salary</h3>
                         <p className="text-2xl">{stats.averageSalary.toFixed(2)} €</p>
                     </div>
 
-                    <div className="bg-yellow-500 text-white p-6 rounded-xl shadow-lg">
+                    <div className="bg-white-500 text-black p-6 rounded-xl shadow-lg border border-gray-300">
                         <h3 className="text-xl font-semibold">Employees per Manager</h3>
                         <div className="h-64">
                             <Bar data={barChartData} options={{ responsive: true }} />
@@ -153,14 +153,14 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-                    <div className="bg-purple-500 text-white p-6 rounded-xl shadow-lg">
+                    <div className="bg-white-500 text-black p-6 rounded-xl shadow-lg border border-gray-300">
                         <h3 className="text-xl font-semibold">Salary Distribution</h3>
                         <div className="h-64">
                             <Doughnut data={doughnutChartData} options={{ responsive: true }} />
                         </div>
                     </div>
 
-                    <div className="bg-orange-500 text-white p-6 rounded-xl shadow-lg">
+                    <div className="bg-white-500 text-black p-6 rounded-xl shadow-lg border border-gray-300">
                         <h3 className="text-xl font-semibold">Average Salary by Department</h3>
                         <div className="h-64">
                             <Bar data={departmentSalaryData} options={{ responsive: true }} />
@@ -168,36 +168,13 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="bg-teal-500 text-white p-6 rounded-xl shadow-lg">
+                <div className="bg-white-500 text-black p-6 rounded-xl shadow-xl border border-gray-300">
                     <h3 className="text-xl font-semibold">Monthly Hiring</h3>
                     <div className="h-64">
                         <Line data={monthlyHiringData} options={{ responsive: true }} />
                     </div>
                 </div>
 
-                <div className="bg-white shadow-md rounded-xl p-6">
-                    <h2 className="text-lg font-semibold mb-4">Latest Employees</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
-                            <thead>
-                            <tr className="bg-blue-500 text-white text-left">
-                                <th className="px-6 py-3">ID</th>
-                                <th className="px-6 py-3">Name</th>
-                                <th className="px-6 py-3">Hire-Date</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {employees.slice(0, 5).map((emp) => (
-                                <tr key={emp.id} className="border-t hover:bg-blue-50 transition">
-                                    <td className="px-6 py-4">{emp.id}</td>
-                                    <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
-                                    <td className="px-6 py-4">{emp.hireDate ? new Date(emp.hireDate).toLocaleDateString() : '—'}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
         </div>
     );
