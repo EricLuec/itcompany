@@ -10,7 +10,7 @@ type Option = {
 };
 
 export default function CreateProjectForm() {
-    const { addProject } = useProjects();
+    const { addProject, refreshProjects } = useProjects();
     const { employees } = useEmployeeContext();
 
     const [name, setName] = useState('');
@@ -68,6 +68,7 @@ export default function CreateProjectForm() {
                 setEndDate('');
                 setBudget('');
                 setStatus('PLANNED');
+                refreshProjects();
             } else {
                 setFormStatus('error');
             }

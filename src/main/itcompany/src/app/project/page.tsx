@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {useProjects} from '@/context/ProjectContext';
 
 export default function ProjectPage() {
-    const { projects, loading, refreshProjects } = useProjects();
+    const { projects, loading, deleteProject } = useProjects();
     const [nameFilter, setNameFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
 
@@ -12,17 +12,6 @@ export default function ProjectPage() {
         (!statusFilter || p.status === statusFilter)
     );
 
-    const deleteProject = async (id: number) => {
-        if (!confirm('Projekt wirklich löschen?')) return;
-        try {
-            const res = await fetch(`http://localhost:8080/projects/${id}`, { method: 'DELETE' });
-            if (!res.ok) throw new Error('Löschen fehlgeschlagen');
-            await refreshProjects();
-        } catch (err) {
-            console.error(err);
-            alert('Fehler beim Löschen des Projekts.');
-        }
-    };
 
     if (loading) return <div className="text-center py-10 text-gray-500">Loading…</div>;
 

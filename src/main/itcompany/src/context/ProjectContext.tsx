@@ -21,6 +21,7 @@ type ProjectContextType = {
     loading: boolean;
     addProject: (project: Project) => void;
     refreshProjects: () => Promise<void>;
+    deleteProject: (id: number) => void;
 };
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -54,8 +55,20 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         await fetchProjects();
     };
 
+    const deleteProject = async (id: number) => {
+        if (!confirm('Dieses Projet wirklich löschen?')) return;
+        try {
+            const res = await fetch(`http://localhost:8080/projects/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Delete failed');
+            setProjects((prev) => prev.filter((project) => project.id !== id));
+        } catch (err) {
+            console.error(err);
+            alert('Löschen fehlgeschlagen.');
+        }
+    };
+
     return (
-        <ProjectContext.Provider value={{ projects, loading, addProject, refreshProjects }}>
+        <ProjectContext.Provider value={{ projects, loading, addProject, refreshProjects, deleteProject }}>
             {children}
         </ProjectContext.Provider>
     );
