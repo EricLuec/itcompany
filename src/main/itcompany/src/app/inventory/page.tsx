@@ -46,7 +46,6 @@ export default function InventoryPage() {
                 </div>
             </div>
 
-            {/* Tabelle */}
             <div className="overflow-x-auto">
                 <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
                     <thead>

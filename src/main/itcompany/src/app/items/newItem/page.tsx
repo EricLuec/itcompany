@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { useInventories } from '@/context/InventoryContext'; // Dein InventoryContext-Hook
+import { useInventories } from '@/context/InventoryContext';
+import {useItems} from "@/context/ItemContext";
 
 type SelectOption = {
     label: string;
@@ -11,6 +12,7 @@ type SelectOption = {
 
 export default function CreateItemForm() {
     const { inventories, loading, refreshInventories } = useInventories();
+    const { refreshItems } = useItems();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState<number | ''>('');
@@ -26,7 +28,6 @@ export default function CreateItemForm() {
     }));
 
     useEffect(() => {
-        // Optional: Inventories beim Mounten aktualisieren
         refreshInventories().catch(console.error);
     }, [refreshInventories]);
 
@@ -51,7 +52,6 @@ export default function CreateItemForm() {
 
             const createdItem = await res.json();
 
-            // Item den Inventories zuweisen
             await Promise.all(
                 selectedInventories.map(inv =>
                     fetch(`http://localhost:8080/inventory/${inv.value}/items`, {
@@ -68,6 +68,7 @@ export default function CreateItemForm() {
             setPrice('');
             setPurchaseDate(new Date().toISOString().split('T')[0]);
             setSelectedInventories([]);
+            refreshItems();
         } catch (err) {
             console.error(err);
             setFormStatus('error');

@@ -23,7 +23,7 @@ public class Employee {
     private String email;
     private int salary;
 
-    @Transient
+    @ManyToOne
     private Sector sector;
 
     private String manager;

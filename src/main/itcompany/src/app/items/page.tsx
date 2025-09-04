@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useItems } from '@/context/ItemContext'; // Importiere den useItems Hook
+import { useItems } from '@/context/ItemContext';
 
 type Employee = {
     id: number;
@@ -21,7 +21,7 @@ type Item = {
 };
 
 export default function ItemsPage() {
-    const { items, inventories, employees, loading, deleteItem, updateItemEmployee } = useItems(); // Zugriff auf den ItemContext
+    const { items, inventories, employees, loading, deleteItem, updateItemEmployee } = useItems();
     const [editItem, setEditItem] = useState<Item | null>(null);
     const [newEmployeeId, setNewEmployeeId] = useState<number | ''>('');
 
@@ -68,14 +68,14 @@ export default function ItemsPage() {
                                 <button
                                     onClick={() => {
                                         setEditItem(item);
-                                        setNewEmployeeId(item.employee?.id || ''); // Setze den Mitarbeiter zum Bearbeiten
+                                        setNewEmployeeId(item.employee?.id || '');
                                     }}
                                     className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Edit Employee
                                 </button>
                                 <button
-                                    onClick={() => deleteItem(item.id)} // deleteItem aus dem Context verwenden
+                                    onClick={() => deleteItem(item.id)}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm"
                                 >
                                     Löschen
@@ -104,7 +104,7 @@ export default function ItemsPage() {
                             value={newEmployeeId}
                             onChange={(e) => {
                                 const val = e.target.value;
-                                setNewEmployeeId(val === '' ? '' : Number(val)); // Update the employee selection
+                                setNewEmployeeId(val === '' ? '' : Number(val));
                             }}
                             className="w-full border rounded-xl px-4 py-2"
                         >

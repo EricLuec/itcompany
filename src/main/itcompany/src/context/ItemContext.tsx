@@ -29,7 +29,7 @@ type ItemContextType = {
     inventories: Inventory[];
     employees: Employee[];
     loading: boolean;
-    refreshData: () => Promise<void>;
+    refreshItems: () => Promise<void>;
     deleteItem: (id: number) => Promise<void>;
     updateItemEmployee: (itemId: number, employeeId: number | null) => Promise<void>;
 };
@@ -69,7 +69,7 @@ export function ItemProvider({ children }: { children: ReactNode }) {
         fetchData();
     }, []);
 
-    const refreshData = async () => {
+    const refreshItems = async () => {
         await fetchData();
     };
 
@@ -111,7 +111,7 @@ export function ItemProvider({ children }: { children: ReactNode }) {
 
     return (
         <ItemContext.Provider
-            value={{ items, inventories, employees, loading, refreshData, deleteItem, updateItemEmployee }}
+            value={{ items, inventories, employees, loading, refreshItems, deleteItem, updateItemEmployee }}
         >
             {children}
         </ItemContext.Provider>

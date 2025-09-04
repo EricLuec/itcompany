@@ -22,6 +22,5 @@ export default function SectorLayout({children}: { children: React.ReactNode }) 
                 </section>
             </div>
         </SectorProvider>
-
     );
 }
