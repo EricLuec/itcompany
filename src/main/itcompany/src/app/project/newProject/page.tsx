@@ -37,7 +37,7 @@ export default function CreateProjectForm() {
             .filter(Boolean) as typeof employees;
 
         const newProject: Project = {
-            id: Date.now(), // temporär
+            id: Date.now(),
             name,
             description,
             manager: manager ? `${manager.firstName} ${manager.lastName}` : '',

@@ -21,7 +21,7 @@ type Item = {
 };
 
 export default function ItemsPage() {
-    const { items, inventories, employees, loading, deleteItem, updateItemEmployee } = useItems();
+    const { items, employees, loading, deleteItem, updateItemEmployee } = useItems();
     const [editItem, setEditItem] = useState<Item | null>(null);
     const [newEmployeeId, setNewEmployeeId] = useState<number | ''>('');
 

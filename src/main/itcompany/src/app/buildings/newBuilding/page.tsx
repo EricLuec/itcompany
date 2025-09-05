@@ -43,7 +43,7 @@ export default function CreateBuildingForm() {
                 setCapacity(0);
                 setBuildingDate('');
                 setSelectedSectors([]);
-                await refreshBuildings();
+                refreshBuildings();
             } else {
                 setMessage('Failed to create building.');
             }

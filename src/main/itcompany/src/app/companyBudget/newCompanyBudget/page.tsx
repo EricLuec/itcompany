@@ -1,7 +1,9 @@
 'use client';
 import { useState } from 'react';
+import {useBudgets} from "@/context/CompanyBudgetContext";
 
 export default function CreateCompanyBudgetForm() {
+    const {refreshBudgets} = useBudgets()
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [totalFunds, setTotalFunds] = useState<number | ''>('');
@@ -36,6 +38,7 @@ export default function CreateCompanyBudgetForm() {
                 setDescription('');
                 setTotalFunds('');
                 setReservedFunds('');
+                refreshBudgets()
             } else {
                 setFormStatus('error');
             }

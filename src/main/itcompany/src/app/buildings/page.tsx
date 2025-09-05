@@ -8,12 +8,6 @@ export default function BuildingPage() {
     const [cityFilter, setCityFilter] = useState('');
     const [nameFilter, setNameFilter] = useState('');
 
-    useEffect(() => {
-        if (!buildings.length) {
-            refreshBuildings();
-        }
-    }, [refreshBuildings]);
-
     const filtered = useMemo(() => {
         return buildings.filter((b) =>
             (!cityFilter || b.city.toLowerCase().includes(cityFilter.toLowerCase())) &&
